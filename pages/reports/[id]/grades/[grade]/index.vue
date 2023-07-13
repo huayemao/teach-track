@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import { SchoolInfo, TeacherInfo, run } from "@/utils/process";
+import localforage from "localforage";
 import type { FunctionalComponent } from "vue";
 import { ref, watch } from "vue";
 
@@ -8,9 +9,10 @@ const route = useRoute();
 const teachers = ref<TeacherInfo[]>();
 const schools = ref<SchoolInfo[]>();
 
-const edit = ref(false);
+const edit = ref(true);
 const isGenerating = ref(false);
 const activeTab = ref("teacher");
+const grade = Number(route.params.grade);
 
 // todo: 已生成后信息用折叠面板收起来，添加编辑按钮，重新编辑后覆盖
 
@@ -26,12 +28,16 @@ const generate = async ({ fileList }) => {
   try {
     const { teachers: teachersData, schools: schoolsData } = await run(
       file,
-      Number(route.params.grade)
+      grade
     );
+
+    localforage.setItem([grade, "teachers"].join("-"), teachersData);
+    localforage.setItem([grade, "schools"].join("-"), schoolsData);
 
     teachers.value = teachersData;
     schools.value = schoolsData;
     isGenerating.value = false;
+    edit.value = false;
   } catch (error) {
     alert("解析错误：" + error?.message);
   } finally {
@@ -39,15 +45,28 @@ const generate = async ({ fileList }) => {
   }
 };
 watch(
-  () => teachers.value,
+  () => edit.value,
   (v) => {
-    if (v?.length) {
+    if (!!v) {
       document
         .querySelector("#__nuxt")
         ?.firstElementChild?.classList.remove("bg-muted-100");
     }
   }
 );
+
+onMounted(async () => {
+  const [teachersData, schoolsData] = await Promise.all(
+    ["teachers", "schools"].map((e) =>
+      localforage.getItem([grade, e].join("-"))
+    )
+  );
+  if (teachersData && schoolsData) {
+    teachers.value = teachersData as TeacherInfo[];
+    schools.value = schoolsData as SchoolInfo[];
+    edit.value = false;
+  }
+});
 
 /* todo: 画出结构示例 */
 const tabs = [
@@ -96,17 +115,19 @@ const Tabs: FunctionalComponent<
   <main>
     <div
       :class="{
-        'h-0 hidden': teachers?.length && !edit,
+        'h-0 hidden': !edit,
         'transition-all duration-300': true,
       }"
     >
       <GenerateForm @confirm="generate" :loading="isGenerating" />
     </div>
     <div
-      :class="{
-        'hidden transition-all duration-300 bg-white ltablet:h-64 ltablet:flex-row relative  h-0 w-full flex-col  lg:flex-row': true,
-        'h-[460px] lg:h-64 !flex': teachers?.length && !edit,
-      }"
+      v-show="!edit"
+      class="ltablet:h-[256px] dark:bg-muted-800 absolute start-0 top-0 h-[420px] w-full bg-white lg:h-[256px]"
+    ></div>
+    <div
+      v-show="!edit"
+      class="ltablet:h-36 ltablet:flex-row relative flex h-[290px] w-full flex-col lg:h-36 lg:flex-row"
     >
       <div
         class="ltablet:flex-row relative z-10 flex w-full flex-col gap-6 lg:flex-row"
@@ -171,11 +192,6 @@ const Tabs: FunctionalComponent<
               </span>
             </div>
           </div>
-          <div
-            class="prose prose-primary prose-muted dark:prose-invert prose-th:p-4 prose-td:p-4 prose-table:bg-white dark:prose-table:bg-muted-800 prose-table:border prose-table:border-muted-200 dark:prose-table:border-muted-700 ltablet:mx-0 prose-sm mx-auto mb-6 max-w-xl lg:mx-0"
-          >
-            <p class="line-clamp-3">按区域分类计算</p>
-          </div>
         </div>
       </div>
       <div
@@ -183,7 +199,9 @@ const Tabs: FunctionalComponent<
       >
         <!-- todo: 编辑按钮 -->
       </div>
-      <div class="absolute bottom-0 start-0 flex items-end gap-2 z-10">
+      <div
+        class="ltablet:bottom-[-30px] absolute bottom-[-48px] start-0 flex items-end gap-2 lg:bottom-[-30px]"
+      >
         <Tabs
           :activeKey="activeTab"
           :data="tabs"
@@ -191,15 +209,15 @@ const Tabs: FunctionalComponent<
         ></Tabs>
       </div>
     </div>
-    <div class="bg-muted-100 p-8">
+    <div class="w-full mt-24">
       <TeacherResultTable
         v-show="activeTab === 'teacher'"
-        v-if="isGenerating || teachers?.length"
+        v-if="!edit"
         :teachers="(teachers as TeacherInfo[])"
       />
       <SchoolResultTable
         v-show="activeTab === 'school'"
-        v-if="isGenerating || schools?.length"
+        v-if="!edit"
         :schools="(schools as SchoolInfo[])"
       />
     </div>

@@ -1,5 +1,17 @@
 <script setup lang="tsx">
 import { GRADE_MAPPING } from "@/constants/index";
+import localforage from "localforage";
+
+const route = useRoute();
+const mapping = {
+  "1": "Junior",
+  "2": "Elementary",
+};
+
+const reportId = route.params.id.toString();
+
+const stage = mapping[reportId];
+console.log(reportId, stage);
 
 const Item = ({ name, to }: { name: string; to: object }) => (
   <div class="flex items-center gap-3">
@@ -42,6 +54,11 @@ const Item = ({ name, to }: { name: string; to: object }) => (
   </div>
 );
 
+onMounted(async () => {
+  const res = await localforage.getItem([7, "schools"].join("-"));
+  console.log(res);
+});
+
 const submissions = [
   { grade: 3, eduStage: "Elementary" },
   { grade: 4, eduStage: "Elementary" },
@@ -56,27 +73,6 @@ const submissions = [
 // 汇总报告，暂无
 </script>
 <template>
-  <!--[--><!--[-->
-  <div
-    class="nuxt-loading-indicator"
-    style="
-      position: fixed;
-      top: 0px;
-      right: 0px;
-      left: 0px;
-      pointer-events: none;
-      width: auto;
-      height: 3px;
-      opacity: 0;
-      background: var(--color-primary-500);
-      transform: scaleX(0);
-      transform-origin: left center;
-      transition: transform 0.1s ease 0s, height 0.4s ease 0s,
-        opacity 0.4s ease 0s;
-      z-index: 999999;
-    "
-  ></div>
-  <div></div>
   <div class="grid grid-cols-3 gap-6">
     <div>
       <div
@@ -86,13 +82,11 @@ const submissions = [
           <h2
             class="font-heading text-3xl font-light leading-tight text-muted-800 mb-2 dark:text-white"
           >
-            <span>todo：学校综合考核</span>
+            <span>学校教学质量</span>
           </h2>
           <p class="font-alt text-sm font-normal leading-normal">
             <span class="text-muted-400">
-              <!-- You have 6 interviews to conduct during this week. Your current
-              progress is great. Check your schedule and don't miss any
-              activity. -->
+              年级教学综合成绩|预测完成目标|九年级入学成绩表
             </span>
           </p>
         </div>
@@ -102,12 +96,12 @@ const submissions = [
             <p
               class="font-alt text-xs font-normal leading-normal leading-normal"
             >
-              <span class="text-muted-400 mb-2">Your Progress</span>
+              <span class="text-muted-400 mb-2">进度</span>
             </p>
             <h4
               class="font-heading text-base font-light leading-tight text-muted-800 dark:text-white"
             >
-              <span>Outstanding</span>
+              <span>录入完成</span>
             </h4>
           </div>
         </div>
@@ -123,7 +117,7 @@ const submissions = [
       </div>
     </div>
 
-    <div v-if="String($route.params.id) === '2'">
+    <div>
       <div
         class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-6"
       >
@@ -151,44 +145,41 @@ const submissions = [
               },
             }"
             v-for="submission in submissions.filter(
-              (e) => e.eduStage === 'Elementary'
+              (e) => e.eduStage === stage
             )"
           />
         </div>
       </div>
     </div>
-    <div v-if="String($route.params.id) === '1'">
-      <div
-        class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-6"
-      >
-        <div class="mb-8 flex items-center justify-between">
-          <h3
-            class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white"
-          >
-            <span>各年级成绩</span>
-          </h3>
-          <a
-            aria-current="page"
-            href="/dashboards/personal-3#"
-            class="router-link-active router-link-exact-active bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
-          >
-            View All
-          </a>
-        </div>
-        <div class="mb-2 space-y-5">
-          <Item
-            :name="GRADE_MAPPING[submission.grade]"
-            :to="{
-              name: $route.name?.toString() + '-grades-grade',
-              params: {
-                grade: submission.grade,
-              },
-            }"
-            v-for="submission in submissions.filter(
-              (e) => e.eduStage === 'Junior'
-            )"
-          />
-        </div>
+
+    <div
+      class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-6"
+    >
+      <div class="mb-8 flex items-center justify-between">
+        <h3
+          class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white"
+        >
+          <span>学校教学质量</span>
+        </h3>
+        <a
+          aria-current="page"
+          href="/dashboards/personal-3#"
+          class="router-link-active router-link-exact-active bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
+        >
+          View All
+        </a>
+      </div>
+      <div class="mb-2 space-y-5">
+        <Item
+          :name="GRADE_MAPPING[submission.grade]"
+          :to="{
+            name: $route.name?.toString() + '-grades-grade',
+            params: {
+              grade: submission.grade,
+            },
+          }"
+          v-for="submission in submissions.filter((e) => e.eduStage === stage)"
+        />
       </div>
     </div>
   </div>

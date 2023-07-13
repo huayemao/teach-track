@@ -167,6 +167,7 @@ export function preprocess(file: File, grade: number) {
         };
       });
 
+      // todo: 校验工作表
       // todo: 校验列名
       // todo: 表头不应允许有空格！
 

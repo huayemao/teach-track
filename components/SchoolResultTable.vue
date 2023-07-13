@@ -18,14 +18,14 @@ const { schools } = defineProps<{
       :label="key"
       label-class-name="text-center"
       :formatter="
-        typeof schools[0][key] === 'number'
+        typeof schools[0][key] === 'number' && !key.includes('数')
           ? (row) =>
               Number(row[key])
                 .toLocaleString('zh-CN', {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2,
                 })
-                .replace(/,/g, '')
+                .replace(/,/g, '') 
           : undefined
       "
     />

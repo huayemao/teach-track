@@ -239,6 +239,7 @@ const gradeName = GRADE_MAPPING[gradeKey];
               class="mt-5 flex flex-col-reverse text-right md:block md:space-x-3"
             >
               <button
+                :disabled="loading"
                 type="submit"
                 class="is-button rounded bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 !h-12 w-full sm:w-40"
               >
