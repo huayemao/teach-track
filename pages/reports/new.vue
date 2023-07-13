@@ -115,11 +115,11 @@ const handleSubmit = async () => {
                       </div>
                       <div class="group/nui-file-headless relative">
                         <div class="relative h-20 w-20">
-                          <img
+                          <!-- <img
                             src="/img/avatars/company.svg"
                             alt="Upload preview"
                             class="bg-muted-200 dark:bg-muted-700/60 h-20 w-20 rounded-full object-cover object-center dark:invert"
-                          />
+                          /> -->
                           <div class="absolute bottom-0 end-0 z-20">
                             <div class="relative" data-tooltip="Upload image">
                               <button

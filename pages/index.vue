@@ -259,12 +259,11 @@ const data: Report[] = [
                           <div
                             class="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300 rounded-full"
                           >
-                            <img
+                            <!-- <img
                               src="/img/avatars/25.svg"
                               class="max-h-full max-w-full object-cover shadow-sm dark:border-transparent h-8 w-8"
-                            /><!----><!---->
+                            /> -->
                           </div>
-                          <!----><!---->
                         </div>
                       </div>
                       <div
@@ -278,12 +277,11 @@ const data: Report[] = [
                           <div
                             class="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300 rounded-full"
                           >
-                            <img
+                            <!-- <img
                               src="/img/avatars/16.svg"
                               class="max-h-full max-w-full object-cover shadow-sm dark:border-transparent h-8 w-8"
-                            /><!----><!---->
+                            /> -->
                           </div>
-                          <!----><!---->
                         </div>
                       </div>
                       <div
