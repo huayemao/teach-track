@@ -15,17 +15,17 @@ interface Token {
   user: User;
 }
 
-onMounted(() => {
-  $fetch<Token>("http://localhost:1337/api/auth/local", {
-    method: "POST",
-    body: {
-      identifier: "test",
-      password: "test111",
-    },
-  }).then((res) => {
-    localStorage.setItem("jwt", res.jwt);
-  });
-});
+// onMounted(() => {
+//   $fetch<Token>("http://localhost:1337/api/auth/local", {
+//     method: "POST",
+//     body: {
+//       identifier: "test",
+//       password: "test111",
+//     },
+//   }).then((res) => {
+//     localStorage.setItem("jwt", res.jwt);
+//   });
+// });
 </script>
 <template>
   <div class="bg-muted-100 dark:bg-muted-900 pb-20">
