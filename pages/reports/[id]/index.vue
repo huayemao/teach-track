@@ -11,9 +11,16 @@ const mapping = {
 const reportId = route.params.id.toString();
 
 const stage = mapping[reportId];
-console.log(reportId, stage);
 
-const Item = ({ name, to }: { name: string; to: object }) => (
+const Item = ({
+  name,
+  to,
+  description,
+}: {
+  name: string;
+  to: object | string;
+  description?: string;
+}) => (
   <div class="flex items-center gap-3">
     <div class="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
       <span>{name.slice(0, 1)} </span>
@@ -23,7 +30,7 @@ const Item = ({ name, to }: { name: string; to: object }) => (
         <NuxtLink to={to}>{name}</NuxtLink>
       </h4>
       <p class="font-alt text-xs font-normal leading-normal leading-normal">
-        <span class="text-muted-400"> </span>
+        <span class="text-muted-400">{description} </span>
       </p>
     </div>
     <div class="ms-auto flex items-center">
@@ -68,7 +75,19 @@ const submissions = [
   { grade: 8, eduStage: "Junior" },
   { grade: 9, eduStage: "Junior" },
 ];
-// todo: 这个做成 tab 吧
+
+const items4school = [
+  {
+    name: "年级教学综合成绩",
+  },
+  {
+    name: "预测完成目标",
+  },
+  {
+    name: "教学质量增量",
+  },
+];
+
 // todo: 图片用 initial
 // 汇总报告，暂无
 </script>
@@ -101,7 +120,7 @@ const submissions = [
             <h4
               class="font-heading text-base font-light leading-tight text-muted-800 dark:text-white"
             >
-              <span>录入完成</span>
+              <span>报表制作完成</span>
             </h4>
           </div>
         </div>
@@ -111,7 +130,7 @@ const submissions = [
             type="button"
             class="is-button rounded-xl bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 h-11 w-full"
           >
-            <span>View Schedule</span>
+            <span>导出完整报表</span>
           </button>
         </div>
       </div>
@@ -125,7 +144,7 @@ const submissions = [
           <h3
             class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white"
           >
-            <span>各年级成绩</span>
+            <span>学科教师教学质量</span>
           </h3>
           <a
             aria-current="page"
@@ -137,7 +156,8 @@ const submissions = [
         </div>
         <div class="mb-2 space-y-5">
           <Item
-            :name="GRADE_MAPPING[submission.grade]"
+            :description="'待录入数据'"
+            :name="GRADE_MAPPING[submission.grade] + '数据'"
             :to="{
               name: $route.name?.toString() + '-grades-grade',
               params: {
@@ -170,16 +190,7 @@ const submissions = [
         </a>
       </div>
       <div class="mb-2 space-y-5">
-        <Item
-          :name="GRADE_MAPPING[submission.grade]"
-          :to="{
-            name: $route.name?.toString() + '-grades-grade',
-            params: {
-              grade: submission.grade,
-            },
-          }"
-          v-for="submission in submissions.filter((e) => e.eduStage === stage)"
-        />
+        <Item v-for="item in items4school" :name="item.name" to="/" />
       </div>
     </div>
   </div>
