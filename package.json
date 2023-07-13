@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@element-plus/nuxt": "^1.0.5",
+    "@nuxtjs/tailwindcss": "^6.8.0",
+    "@shuriken-ui/tailwind": "^0.1.1",
+    "@vueuse/core": "^10.2.1",
+    "@vueuse/nuxt": "^10.2.1",
+    "element-plus": "^2.3.7",
+    "nuxt": "^3.2.2"
+  },
+  "dependencies": {
+    "localforage": "^1.10.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
+  }
+}
