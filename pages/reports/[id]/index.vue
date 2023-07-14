@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { GRADE_MAPPING } from "@/constants/index";
 import localforage from "localforage";
+import { SchoolInfo, TeacherInfo } from "utils/process";
 
 const route = useRoute();
 const mapping = {
@@ -12,59 +13,63 @@ const reportId = route.params.id.toString();
 
 const stage = mapping[reportId];
 
+const allGradeData = ref<
+  Record<
+    number,
+    {
+      teachers: TeacherInfo[] | undefined;
+      schools: SchoolInfo[] | undefined;
+    }
+  >
+>();
+
 const Item = ({
   name,
   to,
   description,
+  status,
 }: {
   name: string;
   to: object | string;
   description?: string;
+  status?: string;
 }) => (
-  <div class="flex items-center gap-3">
-    <div class="border-muted-200 dark:border-muted-700 flex h-10 w-10 items-center justify-center rounded-full border">
-      <span>{name.slice(0, 1)} </span>
+  <NuxtLink to={to} class="flex items-center gap-3">
+    <div class="nui-focus block focus-within:outline-current is-checked">
+      <div
+        class={
+          "peer-disabled:opacity-75 w-8 h-8 " +
+          (status === "finished" ? "text-success-500" : "text-muted-400")
+        }
+      >
+        <svg viewBox="0 0 52 52">
+          <circle
+            cx="26"
+            cy="26"
+            r="25"
+            fill="none"
+            stroke="currentColor"
+          ></circle>
+          {status == "finished" && (
+            <path
+              fill="none"
+              stroke="currentColor"
+              d="m14.1 27.2 7.1 7.2 16.7-16.8"
+            ></path>
+          )}
+        </svg>
+      </div>
     </div>
     <div>
       <h4 class="font-heading text-sm font-light leading-tight text-muted-800 dark:text-white">
-        <NuxtLink to={to}>{name}</NuxtLink>
+        <span>{name}</span>
       </h4>
       <p class="font-alt text-xs font-normal leading-normal leading-normal">
-        <span class="text-muted-400">{description} </span>
+        <span class="text-muted-400">{description}</span>
       </p>
     </div>
-    <div class="ms-auto flex items-center">
-      <NuxtLink
-        to={to}
-        class="disabled:opacity-60 disabled:cursor-not-allowed hover:shadow-none false false text-muted-700 bg-white border border-muted-300 dark:text-white dark:bg-muted-700 dark:hover:bg-muted-600 dark:border-muted-600 hover:bg-muted-50 rounded-xl h-10 w-10 p-2 nui-focus relative inline-flex items-center justify-center space-x-1 font-sans text-sm font-normal leading-5 no-underline outline-none transition-all duration-300 scale-75"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          // xmlns:xlink="http://www.w3.org/1999/xlink"
-          role="img"
-          class="icon h-5 w-5"
-          width="1em"
-          height="1em"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 12h14m-7-7l7 7l-7 7"
-          ></path>
-        </svg>
-      </NuxtLink>
-    </div>
-  </div>
+  </NuxtLink>
 );
-
-onMounted(async () => {
-  const res = await localforage.getItem([7, "schools"].join("-"));
-  console.log(res);
-});
 
 const submissions = [
   { grade: 3, eduStage: "Elementary" },
@@ -88,6 +93,30 @@ const items4school = [
   },
 ];
 
+onMounted(async () => {
+  const grades = submissions
+    .filter((e) => e.eduStage === stage)
+    .map((e) => e.grade);
+
+  const entries = await Promise.all(
+    grades.map(async (grade) => {
+      const [teachers, schools] = await Promise.all(
+        ["teachers", "schools"].map((e) =>
+          localforage.getItem([grade, e].join("-"))
+        )
+      );
+      return [
+        grade,
+        {
+          teachers,
+          schools,
+        },
+      ];
+    })
+  );
+  const resultsByGrade = Object.fromEntries(entries);
+  allGradeData.value = resultsByGrade;
+});
 // todo: 图片用 initial
 // 汇总报告，暂无
 </script>
@@ -146,27 +175,32 @@ const items4school = [
           >
             <span>学科教师教学质量</span>
           </h3>
-          <a
+          <!-- <a
             aria-current="page"
             href="/dashboards/personal-3#"
             class="router-link-active router-link-exact-active bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
           >
             View All
-          </a>
+          </a> -->
         </div>
         <div class="mb-2 space-y-5">
           <Item
-            :description="'待录入数据'"
-            :name="GRADE_MAPPING[submission.grade] + '数据'"
-            :to="{
-              name: $route.name?.toString() + '-grades-grade',
-              params: {
-                grade: submission.grade,
-              },
-            }"
             v-for="submission in submissions.filter(
               (e) => e.eduStage === stage
             )"
+            :status="
+              allGradeData?.[submission.grade]?.teachers ? 'finished' : 'none'
+            "
+            :description="
+              allGradeData?.[submission.grade]?.teachers
+                ? '已录入'
+                : '待录入数据'
+            "
+            :name="GRADE_MAPPING[submission.grade] + '数据'"
+            :to="{
+              name: $route.name?.toString() + '-grades-grade',
+              params: { grade: submission.grade },
+            }"
           />
         </div>
       </div>
@@ -181,15 +215,15 @@ const items4school = [
         >
           <span>学校教学质量</span>
         </h3>
-        <a
+        <!-- <a
           aria-current="page"
           href="/dashboards/personal-3#"
           class="router-link-active router-link-exact-active bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
         >
           View All
-        </a>
+        </a> -->
       </div>
-      <div class="mb-2 space-y-5">
+      <div class="mb-2 space-y-6">
         <Item v-for="item in items4school" :name="item.name" to="/" />
       </div>
     </div>
