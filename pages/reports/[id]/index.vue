@@ -83,9 +83,9 @@ const items4school = computed(() => {
       name: "年级教学综合成绩",
       description: gradeResultFinished
         ? "已生成"
-        : "待录入数据：九年级入学成绩",
+        : "待录入数据：各年级考试成绩",
       status: gradeResultFinished ? "finished" : "",
-      to: ".",
+      to: "",
     },
     {
       name: "预测完成目标",
@@ -228,7 +228,10 @@ onMounted(async () => {
       <div class="mb-2 space-y-6">
         <NuxtLink
           v-for="item in items4school"
-          class="flex items-center gap-3"
+          :class="{
+            'flex items-center gap-3': true,
+            'pointer-events-none': !item.to,
+          }"
           :to="item.to"
         >
           <Item
