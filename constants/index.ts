@@ -267,7 +267,10 @@ export const DEFAULT_SUBMISSIONS = [
   { grade: 9, eduStage: "Junior" },
 ];
 
-export const REPORT_ID_EDU_STAGE_MAPPING = {
+export const REPORT_ID_EDU_STAGE_MAPPING: Record<
+  string,
+  "Elementary" | "Junior"
+> = {
   "1": "Junior",
   "2": "Elementary",
 };

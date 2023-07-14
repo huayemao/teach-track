@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { useStorageState } from "@/composables/storage";
 import {
 DEFAULT_SUBMISSIONS,
 GRADE_MAPPING,
@@ -12,6 +13,9 @@ const route = useRoute();
 const reportId = route.params.id.toString();
 
 const stage = REPORT_ID_EDU_STAGE_MAPPING[reportId];
+
+const { data: predictData } = useStorageState([stage, "predict"].join("-"));
+const { data: incrementData } = useStorageState([stage, "increment"].join("-"));
 
 const allGradeData = ref<
   Record<
@@ -83,18 +87,24 @@ const items4school = computed(() => {
         ? "已生成"
         : "待录入数据：九年级入学成绩",
       status: gradeResultFinished ? "finished" : "",
-      to: "/",
+      to: ".",
     },
     {
       name: "预测完成目标",
-      description: "待录入数据：九年级预测目标完成情况统计表",
-      to: "/",
+      description: predictData.value
+        ? "已生成"
+        : "待录入数据：九年级预测目标完成情况统计表",
+      to: { name: route.name?.toString() + "-predict" },
+      status: predictData.value ? "finished" : "",
     },
     // todo: 实际要导入的是九年级入学成绩。。。
     {
       name: "教学质量增量",
-      description: "待录入数据：九年级入学成绩",
+      description: incrementData.value
+        ? "已生成"
+        : "待录入数据：九年级入学成绩",
       to: { name: route.name?.toString() + "-increment" },
+      status: incrementData.value ? "finished" : "",
     },
   ];
 });
@@ -203,13 +213,14 @@ onMounted(async () => {
         >
           <span>学校教学质量</span>
         </h3>
-        <!-- <a
-          aria-current="page"
-          href="/dashboards/personal-3#"
+        <NuxtLink
+          :to="{
+            name: $route.name?.toString() + '-school',
+          }"
           class="router-link-active router-link-exact-active bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
         >
-          View All
-        </a> -->
+          查看结果
+        </NuxtLink>
       </div>
       <div class="mb-2 space-y-6">
         <Item

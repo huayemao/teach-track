@@ -217,6 +217,35 @@ export function preprocess(file: File, grade: number) {
   });
 }
 
+export type SchoolIncrement = {
+  学校: string;
+  入口总分: number;
+  "入口 Z 分": Number;
+  出口总分: number;
+  "出口 Z 分": number;
+  教学质量增量: number;
+};
+
+export function runPredict(file: File, grade: number) {
+  return new Promise<SchoolIncrement[]>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      if (!e.target) {
+        return;
+      }
+      const workbook = XLSX.read(e.target.result);
+
+      const preDictScoreData = XLSX.utils.sheet_to_json(
+        Object.values(workbook.Sheets)[0]
+      );
+
+      resolve(preDictScoreData);
+      /* DO SOMETHING WITH workbook HERE */
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
 export function runIncrement(file: File, grade: number, schools: SchoolInfo[]) {
   return new Promise<{
     学校: string;
@@ -224,7 +253,7 @@ export function runIncrement(file: File, grade: number, schools: SchoolInfo[]) {
     "入口 Z 分": Number;
     出口总分: number;
     "出口 Z 分": number;
-    "教学质量增量": number;
+    教学质量增量: number;
   }>((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = function (e) {
@@ -298,7 +327,7 @@ export function runIncrement(file: File, grade: number, schools: SchoolInfo[]) {
           "入口 Z 分": inputZScore,
           出口总分: school["年级总分（含加分）"],
           "出口 Z 分": outPutZScore,
-          "教学质量增量": outPutZScore - inputZScore,
+          教学质量增量: outPutZScore - inputZScore,
         });
       }
 

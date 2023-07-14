@@ -4,7 +4,7 @@ import {
 DEFAULT_SUBMISSIONS,
 REPORT_ID_EDU_STAGE_MAPPING,
 } from "@/constants/index";
-import { runIncrement } from "@/utils/process";
+import { runPredict } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
 import type { FunctionalComponent } from "vue";
 import { ref, watch } from "vue";
@@ -12,14 +12,14 @@ import { ref, watch } from "vue";
 const route = useRoute();
 const reportId = route.params.id.toString();
 const { eduStage } = useReport();
-const { data: tableData, mutate } = useStorageState(
-  [eduStage, "increment"].join("-"),
-  null
-);
 
 const edit = ref(true);
 const isGenerating = ref(false);
 const activeTab = ref("teacher");
+
+const { data: tableData, mutate } = useStorageState<object[]>(
+  [eduStage, "predict"].join("-")
+);
 
 const generate = async ({ fileList }) => {
   const file = fileList[0];
@@ -27,16 +27,16 @@ const generate = async ({ fileList }) => {
     return;
   }
 
-  const res = await runIncrement(file, 9, await getSchools());
+  const res = await runPredict(file, 9);
   tableData.value = res;
-  mutate(res);
   edit.value = false;
+  mutate(res);
 };
 
 watch(
   () => tableData.value,
-  (v, pre) => {
-    if (v && !pre) {
+  (v, prev) => {
+    if (!!v && !prev) {
       edit.value = false;
     }
   }
@@ -69,8 +69,6 @@ onMounted(async () => {
   if (!schools) {
     alert("请先录入九年级中考成绩");
   }
-
-  // todo: 如果有，要设值
 
   // todo: 平均分要加一列按加分之后算的。。。
 });
@@ -126,7 +124,7 @@ const Tabs: FunctionalComponent<
         'transition-all duration-300': true,
       }"
     >
-      <IncrementForm @confirm="generate" :loading="isGenerating" />
+      <PredictForm @confirm="generate" :loading="isGenerating" />
     </div>
     <div
       v-show="!edit"
