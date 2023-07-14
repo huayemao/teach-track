@@ -48,7 +48,9 @@ const gradeName = GRADE_MAPPING[gradeKey];
             <span>生成报表</span>
           </h2>
           <p class="font-alt text-sm font-normal leading-normal">
-            <span class="text-muted-500"> 导入年级数据：包括学生成绩、教师、学校等</span>
+            <span class="text-muted-500">
+              导入年级数据：包括学生成绩、教师、学校等</span
+            >
           </p>
         </div>
       </div>
@@ -128,7 +130,11 @@ const gradeName = GRADE_MAPPING[gradeKey];
                   <div
                     class="absolute top-0 right-0 inline-flex items-center gap-1 text-muted-400"
                   >
-                    <CheckBox label="按区域配置权重" v-model="byRegion" id="byRegion"></CheckBox>
+                    <CheckBox
+                      label="按区域配置权重"
+                      v-model="byRegion"
+                      id="byRegion"
+                    ></CheckBox>
                   </div>
                   <el-table
                     v-if="!!byRegion"
@@ -238,13 +244,9 @@ const gradeName = GRADE_MAPPING[gradeKey];
             <div
               class="mt-5 flex flex-col-reverse text-right md:block md:space-x-3"
             >
-              <button
-                :disabled="loading"
-                type="submit"
-                class="is-button rounded bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 !h-12 w-full sm:w-40"
+              <Button :disabled="loading" :loading="loading" type="submit"
+                >生成报表</Button
               >
-                生成报表
-              </button>
               <!-- <button
                 type="button"
                 class="is-button rounded is-button-default w-full sm:w-32"
