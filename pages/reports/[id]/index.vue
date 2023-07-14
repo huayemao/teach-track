@@ -29,16 +29,14 @@ const allGradeData = ref<
 
 const Item = ({
   name,
-  to,
   description,
   status,
 }: {
   name: string;
-  to: object | string;
   description?: string;
   status?: string;
 }) => (
-  <NuxtLink to={to} class="flex items-center gap-3">
+  <>
     <div class="nui-focus block focus-within:outline-current is-checked">
       <div
         class={
@@ -72,7 +70,7 @@ const Item = ({
         <span class="text-muted-400">{description}</span>
       </p>
     </div>
-  </NuxtLink>
+  </>
 );
 
 const items4school = computed(() => {
@@ -182,24 +180,29 @@ onMounted(async () => {
           </a> -->
         </div>
         <div class="mb-2 space-y-5">
-          <Item
-            v-for="submission in DEFAULT_SUBMISSIONS.filter(
-              (e) => e.eduStage === stage
-            )"
-            :status="
-              allGradeData?.[submission.grade]?.teachers ? 'finished' : 'none'
-            "
-            :description="
-              allGradeData?.[submission.grade]?.teachers
-                ? '已录入'
-                : '待录入数据'
-            "
-            :name="GRADE_MAPPING[submission.grade] + '数据'"
+          <NuxtLink
+            class="flex items-center gap-3"
             :to="{
               name: $route.name?.toString() + '-grades-grade',
               params: { grade: submission.grade },
             }"
-          />
+            v-for="submission in DEFAULT_SUBMISSIONS.filter(
+              (e) => e.eduStage === stage
+            )"
+            :key="submission.grade"
+          >
+            <Item
+              :status="
+                allGradeData?.[submission.grade]?.teachers ? 'finished' : 'none'
+              "
+              :description="
+                allGradeData?.[submission.grade]?.teachers
+                  ? '已录入'
+                  : '待录入数据'
+              "
+              :name="GRADE_MAPPING[submission.grade] + '数据'"
+            />
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -223,13 +226,17 @@ onMounted(async () => {
         </NuxtLink>
       </div>
       <div class="mb-2 space-y-6">
-        <Item
+        <NuxtLink
           v-for="item in items4school"
-          :status="item.status"
-          :description="item.description"
-          :name="item.name"
+          class="flex items-center gap-3"
           :to="item.to"
-        />
+        >
+          <Item
+            :status="item.status"
+            :description="item.description"
+            :name="item.name"
+          />
+        </NuxtLink>
       </div>
     </div>
   </div>

@@ -47,7 +47,7 @@ onMounted(() => {
         class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 pointer-events-auto relative z-20 flex h-full w-[80px] flex-col border-r bg-white transition-all duration-300 -translate-x-full xl:translate-x-0"
       >
         <div class="flex h-16 w-full items-center justify-center">
-          <a href="/" class="flex items-center justify-center"
+          <NuxtLink to="/" class="flex items-center justify-center"
             ><svg
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +122,7 @@ onMounted(() => {
                   ></rect>
                 </g>
               </g></svg
-          ></a>
+          ></NuxtLink>
         </div>
         <div>
           <div class="flex h-16 w-full items-center justify-center">
