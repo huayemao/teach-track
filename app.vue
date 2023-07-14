@@ -39,7 +39,7 @@ onMounted(() => {
 // });
 </script>
 <template>
-  <div class="bg-muted-100 dark:bg-muted-900 pb-20">
+  <div class="bg-muted-100 dark:bg-muted-900">
     <div
       class="pointer-events-none fixed start-0 top-0 z-[60] flex h-full xl:z-10"
     >

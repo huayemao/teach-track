@@ -121,6 +121,7 @@ const Tabs: FunctionalComponent<
     >
       <GenerateForm @confirm="generate" :loading="isGenerating" />
     </div>
+
     <div
       v-show="!edit"
       class="ltablet:h-[256px] dark:bg-muted-800 absolute start-0 top-0 h-[420px] w-full bg-white lg:h-[256px]"
