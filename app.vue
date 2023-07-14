@@ -187,35 +187,6 @@ onMounted(() => {
                 </g></svg
             ></a>
           </div>
-          <div class="flex h-16 w-full items-center justify-center">
-            <span></span>
-            <div
-              class="group inline-flex items-center justify-center text-right"
-            >
-              <div
-                data-headlessui-state=""
-                class="relative h-10 w-10 text-left"
-              >
-                <button
-                  class="group-hover:ring-primary-500 dark:ring-offset-muted-800 inline-flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-transparent transition-all duration-300 group-hover:ring-offset-4"
-                  id="headlessui-menu-button-610"
-                  aria-haspopup="menu"
-                  aria-expanded="false"
-                  type="button"
-                >
-                  <div
-                    class="relative inline-flex h-10 w-10 items-center justify-center rounded-full"
-                  >
-                    <!-- <img
-                      src="/img/avatars/2.svg"
-                      class="max-w-full rounded-full object-cover shadow-sm dark:border-transparent"
-                      alt=""
-                    /> -->
-                  </div></button
-                ><!---->
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div

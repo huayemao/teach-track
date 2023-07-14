@@ -31,4 +31,16 @@
     outline-style: dashed;
     outline-width: 1px;
   }
+
+  .is-button-default {
+    --tw-border-opacity: 1;
+    --tw-bg-opacity: 1;
+    --tw-text-opacity: 1;
+    background-color: #fff;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    border-color: rgb(var(--color-muted-300) / var(--tw-border-opacity));
+    border-width: 1px;
+    color: rgb(var(--color-muted-700) / 1);
+    color: rgb(var(--color-muted-700) / var(--tw-text-opacity));
+  }
 }

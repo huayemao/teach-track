@@ -48,7 +48,7 @@ const gradeName = GRADE_MAPPING[gradeKey];
             <span>生成报表</span>
           </h2>
           <p class="font-alt text-sm font-normal leading-normal">
-            <span class="text-muted-500"> 导入数据，配置参数，生成报表 </span>
+            <span class="text-muted-500"> 导入年级数据：包括学生成绩、教师、学校等</span>
           </p>
         </div>
       </div>

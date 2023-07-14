@@ -136,28 +136,12 @@ const Tabs: FunctionalComponent<
           <h2
             class="font-heading text-xl font-semibold leading-normal ltablet:justify-start flex items-center justify-center gap-2 lg:justify-start"
           >
-            <span class="text-muted-800 dark:text-white">元谋县</span
-            ><svg
-              data-v-cd102a71=""
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              aria-hidden="true"
-              role="img"
-              class="icon h-4 w-4 text-yellow-400"
-              width="1em"
-              height="1em"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fill="currentColor"
-                d="m9.89 17.514l-4.21 2.257l-.099.044c-.715.27-1.39.216-1.903-.242c-.482-.43-.657-1.046-.557-1.755l.704-4.86l-3.18-3.342c-.55-.56-.765-1.248-.58-1.968c.205-.799.88-1.258 1.851-1.412l4.227-.638l2.213-4.585C8.7.366 9.236-.017 9.911.001c.66.017 1.183.422 1.593 1.143l2.14 4.486l4.74.658c.753.13 1.308.522 1.53 1.176c.22.653.01 1.313-.557 1.987l-3.44 3.51l.772 4.856c.122.84-.025 1.505-.586 1.9c-.506.357-1.139.357-1.867.107l-.12-.053l-4.226-2.257Z"
-              ></path>
-            </svg>
+            <span class="text-muted-800 dark:text-white">元谋县</span>
           </h2>
-          <span class="text-muted-400 mb-4 block font-sans text-base">
+          <!-- <span class="text-muted-400 mb-4 block font-sans text-base">
             七年级
-          </span>
-          <div class="mb-6 flex items-center gap-x-6">
+          </span> -->
+          <!-- <div class="mb-6 flex items-center gap-x-6">
             <div
               class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
             >
@@ -191,13 +175,19 @@ const Tabs: FunctionalComponent<
                 学校
               </span>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
       <div
         class="ltablet:justify-start ltablet:ms-auto ltablet:mt-0 mt-4 flex shrink-0 justify-center lg:ms-auto lg:mt-0 lg:justify-start"
       >
-        <!-- todo: 编辑按钮 -->
+        <button
+          @click="() => (edit = true)"
+          type="button"
+          class="is-button rounded is-button-default ltablet:w-auto ltablet:mx-0 mx-auto w-52 lg:mx-0 lg:w-auto"
+        >
+          <span>编辑</span>
+        </button>
       </div>
       <div
         class="ltablet:bottom-[-30px] absolute bottom-[-48px] start-0 flex items-end gap-2 lg:bottom-[-30px]"
