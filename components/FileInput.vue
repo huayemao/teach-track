@@ -1,20 +1,23 @@
 <script setup lang="ts">
 const fileInput = ref();
 
-defineProps(["modelValue"]);
+defineProps(["modelValue", "label"]);
 const emit = defineEmits<{
   (e: "update:modelValue", fileList: FileList | null): void;
 }>();
 
 const handleFileChange = (e) => {
-  emit("update:modelValue", (fileInput.value?.files || null) as FileList | null);
+  emit(
+    "update:modelValue",
+    (fileInput.value?.files || null) as FileList | null
+  );
 };
 </script>
 
 <template>
-  <label class="nui-label w-full pb-1 text-[0.825rem]" for="ninja-input-305"
-    >导入数据</label
-  >
+  <label class="nui-label w-full pb-1 text-[0.825rem]" for="ninja-input-305">{{
+    label || "导入数据"
+  }}</label>
   <div class="group/nui-input-file relative">
     <label
       tabindex="0"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps(["modelValue"]);
+defineProps(["modelValue", "label"]);
 defineEmits(["update:modelValue"]);
 </script>
 <template>
@@ -46,7 +46,7 @@ defineEmits(["update:modelValue"]);
     <label
       :for="$attrs.id"
       class="text-muted-400 ms-1 cursor-pointer select-none font-sans text-sm"
-      >按区域配置权重</label
+      >{{ label }}</label
     >
   </div>
 </template>

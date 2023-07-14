@@ -31,6 +31,7 @@ type ExamResult = {
   州考考号: string;
   州考姓名: string;
   英语原: string;
+  "总分（含加分）"?: string;
 };
 
 export type TeacherInfo = {
@@ -68,6 +69,7 @@ export type SchoolInfo = {
   巩固率实际得分: number;
   综合成绩: number;
   名次: number;
+  "年级总分（含加分）"?: number;
 };
 
 const parseClasses = (str: string) => {
@@ -310,6 +312,9 @@ function runSchools(schools: SchoolInfo[], json: ExamResult[], grade: number) {
     // }).length;
 
     school.年级总分 = schoolTotalScore;
+    school["年级总分（含加分）"] = students
+      .map((e) => Number(e["总分（含加分）"]))
+      .reduce((arr, score) => arr + score, 0);
     school.年级总平均分 = averageScore;
     school.实考数 = attendCount;
     // school.全科合格数 = fullyQualifiedCount;

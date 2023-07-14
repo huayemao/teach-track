@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import {
-DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION,
-GRADE_MAPPING,
-SCHOOLS,
-} from "@/constants/index";
+import { SCHOOLS } from "@/constants/index";
 
 // todo: 还应包括配置参数。
 type Payload = {
@@ -29,11 +25,6 @@ const handleSubmit = () => {
 };
 
 const route = useRoute();
-if (!route.params.grade) {
-  throw Error("路由错误");
-}
-const gradeKey = Number(route.params.grade);
-const gradeName = GRADE_MAPPING[gradeKey];
 </script>
 <template>
   <div class="">
@@ -45,10 +36,12 @@ const gradeName = GRADE_MAPPING[gradeKey];
           <h2
             class="font-heading text-xl font-light leading-tight text-muted-800 dark:text-white"
           >
-            <span>生成报表</span>
+            <span>教学质量增量</span>
           </h2>
           <p class="font-alt text-sm font-normal leading-normal">
-            <span class="text-muted-500"> 导入年级数据：包括学生成绩、教师、学校等</span>
+            <span class="text-muted-500">
+              导入九年级学生入学成绩，计算学校教学质量增量
+            </span>
           </p>
         </div>
       </div>
@@ -100,13 +93,17 @@ const gradeName = GRADE_MAPPING[gradeKey];
                   class="relative mb-5 flex flex-col items-center justify-center gap-4"
                 >
                   <div class="relative">
-                    2022元谋县教学质量分析报表——{{ gradeName }}
+                    2022元谋县教学质量分析报表——教学质量增量
                   </div>
                 </div>
                 <div class="grid grid-cols-12 gap-4">
                   <div class="col-span-12">
                     <div class="relative">
-                      <FileInput v-model="xslx" id="xlsx" />
+                      <FileInput
+                        v-model="xslx"
+                        id="xlsx"
+                        label="导入九年级学生入学成绩"
+                      />
                     </div>
                   </div>
                 </div>
@@ -118,55 +115,7 @@ const gradeName = GRADE_MAPPING[gradeKey];
         <div shape="curved" class="w-full space-y-8 p-10">
           <div class="mx-auto w-full max-w-[410px]">
             <div class="grid grid-cols-12 gap-4">
-              <div class="col-span-12">
-                <div class="relative gap-1 text-muted-400">
-                  <div
-                    class="text-muted-500 dark:text-muted-400 mb-2 select-none font-sans text-sm"
-                  >
-                    权重配置
-                  </div>
-                  <div
-                    class="absolute top-0 right-0 inline-flex items-center gap-1 text-muted-400"
-                  >
-                    <CheckBox label="按区域配置权重" v-model="byRegion" id="byRegion"></CheckBox>
-                  </div>
-                  <el-table
-                    v-if="!!byRegion"
-                    :data="DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION"
-                    striped
-                    class="border"
-                  >
-                    <el-table-column
-                      header-align="center"
-                      align="center"
-                      prop="name"
-                      label="类别"
-                      label-class-name="text-center"
-                    />
-                    <el-table-column
-                      header-align="center"
-                      align="center"
-                      prop="averageScore"
-                      label="平均分"
-                      label-class-name="text-center"
-                    />
-                    <el-table-column
-                      header-align="center"
-                      align="center"
-                      prop="qualifiedRate"
-                      label="合格率"
-                      label-class-name="text-center"
-                    />
-                    <el-table-column
-                      header-align="center"
-                      align="center"
-                      prop="excellentRate"
-                      label="优生率"
-                      label-class-name="text-center"
-                    />
-                  </el-table>
-                </div>
-              </div>
+              <div class="col-span-12"></div>
               <div class="col-span-12" v-if="!!byRegion">
                 <div class="relative w-full">
                   <div

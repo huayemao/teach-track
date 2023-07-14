@@ -1,17 +1,17 @@
 <script setup lang="tsx">
-import { GRADE_MAPPING } from "@/constants/index";
-import localforage from "localforage";
-import { SchoolInfo, TeacherInfo } from "utils/process";
+import {
+DEFAULT_SUBMISSIONS,
+GRADE_MAPPING,
+REPORT_ID_EDU_STAGE_MAPPING,
+} from "@/constants/index";
+import { SchoolInfo, TeacherInfo } from "@/utils/process";
+import { getGradeResults } from "@/utils/store";
 
 const route = useRoute();
-const mapping = {
-  "1": "Junior",
-  "2": "Elementary",
-};
 
 const reportId = route.params.id.toString();
 
-const stage = mapping[reportId];
+const stage = REPORT_ID_EDU_STAGE_MAPPING[reportId];
 
 const allGradeData = ref<
   Record<
@@ -71,16 +71,6 @@ const Item = ({
   </NuxtLink>
 );
 
-const submissions = [
-  { grade: 3, eduStage: "Elementary" },
-  { grade: 4, eduStage: "Elementary" },
-  { grade: 5, eduStage: "Elementary" },
-  { grade: 6, eduStage: "Elementary" },
-  { grade: 7, eduStage: "Junior" },
-  { grade: 8, eduStage: "Junior" },
-  { grade: 9, eduStage: "Junior" },
-];
-
 const items4school = computed(() => {
   const gradeResultFinished =
     allGradeData.value &&
@@ -93,41 +83,28 @@ const items4school = computed(() => {
         ? "已生成"
         : "待录入数据：九年级入学成绩",
       status: gradeResultFinished ? "finished" : "",
+      to: "/",
     },
     {
       name: "预测完成目标",
       description: "待录入数据：九年级预测目标完成情况统计表",
+      to: "/",
     },
     // todo: 实际要导入的是九年级入学成绩。。。
     {
       name: "教学质量增量",
       description: "待录入数据：九年级入学成绩",
+      to: { name: route.name?.toString() + "-increment" },
     },
   ];
 });
 
 onMounted(async () => {
-  const grades = submissions
-    .filter((e) => e.eduStage === stage)
-    .map((e) => e.grade);
-
-  const entries = await Promise.all(
-    grades.map(async (grade) => {
-      const [teachers, schools] = await Promise.all(
-        ["teachers", "schools"].map((e) =>
-          localforage.getItem([grade, e].join("-"))
-        )
-      );
-      return [
-        grade,
-        {
-          teachers,
-          schools,
-        },
-      ];
-    })
+  const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === stage).map(
+    (e) => e.grade
   );
-  const resultsByGrade = Object.fromEntries(entries);
+
+  const resultsByGrade = await getGradeResults(grades);
   allGradeData.value = resultsByGrade;
 });
 // todo: 图片用 initial
@@ -196,7 +173,7 @@ onMounted(async () => {
         </div>
         <div class="mb-2 space-y-5">
           <Item
-            v-for="submission in submissions.filter(
+            v-for="submission in DEFAULT_SUBMISSIONS.filter(
               (e) => e.eduStage === stage
             )"
             :status="
@@ -240,7 +217,7 @@ onMounted(async () => {
           :status="item.status"
           :description="item.description"
           :name="item.name"
-          to="/"
+          :to="item.to"
         />
       </div>
     </div>

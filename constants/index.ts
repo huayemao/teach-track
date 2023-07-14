@@ -256,3 +256,18 @@ export const GRADE_MAPPING = {
   8: "八年级",
   9: "九年级",
 };
+
+export const DEFAULT_SUBMISSIONS = [
+  { grade: 3, eduStage: "Elementary" },
+  { grade: 4, eduStage: "Elementary" },
+  { grade: 5, eduStage: "Elementary" },
+  { grade: 6, eduStage: "Elementary" },
+  { grade: 7, eduStage: "Junior" },
+  { grade: 8, eduStage: "Junior" },
+  { grade: 9, eduStage: "Junior" },
+];
+
+export const REPORT_ID_EDU_STAGE_MAPPING = {
+  "1": "Junior",
+  "2": "Elementary",
+};
