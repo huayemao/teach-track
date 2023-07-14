@@ -81,17 +81,30 @@ const submissions = [
   { grade: 9, eduStage: "Junior" },
 ];
 
-const items4school = [
-  {
-    name: "年级教学综合成绩",
-  },
-  {
-    name: "预测完成目标",
-  },
-  {
-    name: "教学质量增量",
-  },
-];
+const items4school = computed(() => {
+  const gradeResultFinished =
+    allGradeData.value &&
+    Object.values(allGradeData.value).every((e) => e?.schools);
+
+  return [
+    {
+      name: "年级教学综合成绩",
+      description: gradeResultFinished
+        ? "已生成"
+        : "待录入数据：九年级入学成绩",
+      status: gradeResultFinished ? "finished" : "",
+    },
+    {
+      name: "预测完成目标",
+      description: "待录入数据：九年级预测目标完成情况统计表",
+    },
+    // todo: 实际要导入的是九年级入学成绩。。。
+    {
+      name: "教学质量增量",
+      description: "待录入数据：九年级入学成绩",
+    },
+  ];
+});
 
 onMounted(async () => {
   const grades = submissions
@@ -141,9 +154,7 @@ onMounted(async () => {
         <div class="mb-4 mt-auto flex items-center gap-2">
           <div class="text-4xl"><span>🎉</span></div>
           <div>
-            <p
-              class="font-alt text-xs font-normal leading-normal leading-normal"
-            >
+            <p class="font-alt text-xs font-normal leading-normal">
               <span class="text-muted-400 mb-2">进度</span>
             </p>
             <h4
@@ -224,7 +235,13 @@ onMounted(async () => {
         </a> -->
       </div>
       <div class="mb-2 space-y-6">
-        <Item v-for="item in items4school" :name="item.name" to="/" />
+        <Item
+          v-for="item in items4school"
+          :status="item.status"
+          :description="item.description"
+          :name="item.name"
+          to="/"
+        />
       </div>
     </div>
   </div>
