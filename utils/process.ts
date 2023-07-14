@@ -8,6 +8,7 @@ import {
 } from "@/constants/index";
 import flatMap from "lodash/flatMap";
 import groupBy from "lodash/groupBy";
+import map from "lodash/map";
 import pick from "lodash/pick";
 import XLSX from "xlsx";
 
@@ -32,6 +33,7 @@ type ExamResult = {
   州考姓名: string;
   英语原: string;
   "总分（含加分）"?: string;
+  折合总分?: string;
 };
 
 export type TeacherInfo = {
@@ -213,6 +215,115 @@ export function preprocess(file: File, grade: number) {
     };
     reader.readAsArrayBuffer(file);
   });
+}
+
+export function runIncrement(file: File, grade: number, schools: SchoolInfo[]) {
+  return new Promise<{
+    学校: string;
+    入口总分: number;
+    "入口 Z 分": Number;
+    出口总分: number;
+    "出口 Z 分": number;
+    "教学质量增量": number;
+  }>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      if (!e.target) {
+        return;
+      }
+      const workbook = XLSX.read(e.target.result);
+
+      const studentsInput = XLSX.utils.sheet_to_json(
+        Object.values(workbook.Sheets)[0]
+      ) as ExamResult[];
+
+      const studentsInputBySchool = groupBy(studentsInput, "学校");
+
+      // 入口成绩不需要应考人数
+
+      const inputSchools: {
+        totalScore: number;
+        name: string;
+        attendCount: number;
+      }[] = map(studentsInputBySchool, (v, key) => {
+        const scores = v.map((e) => Number(e.折合总分 || 0));
+        return {
+          totalScore: scores.reduce((acc, val) => acc + val, 0),
+          name: key,
+          attendCount: scores.filter((e) => e > 0).length,
+        };
+      });
+
+      const a =
+        inputSchools
+          .map((e) => e.totalScore)
+          .reduce((acc, val) => acc + val, 0) /
+        studentsInput.filter((e) => e.折合总分 > 0).length;
+
+      const s = calculateStandardDeviation(
+        inputSchools.map((e) => e.totalScore / e.attendCount),
+        a
+      );
+
+      const averageScore =
+        schools
+          .map((e) => e["年级总分（含加分）"] as number)
+          .reduce((acc, val) => acc + val, 0) /
+        schools.map((e) => e.应考数).reduce((acc, val) => acc + val, 0);
+
+      const standardDeviation = calculateStandardDeviation(
+        schools.map((e) => (e["年级总分（含加分）"] as number) / e["应考数"]),
+        averageScore
+      );
+
+      const data = [];
+
+      for (const school of schools) {
+        const outPutZScore =
+          ((school["年级总分（含加分）"] as number) / school["应考数"] -
+            averageScore) /
+          standardDeviation;
+
+        const inputSchool = inputSchools.find((e) => e.name === school.校区);
+
+        if (!inputSchool) {
+          throw Error("入口学校错误");
+        }
+        const inputZScore =
+          (inputSchool.totalScore / inputSchool.attendCount - a) / s;
+
+        data.push({
+          学校: school.校区,
+          入口总分: inputSchool.totalScore,
+          "入口 Z 分": inputZScore,
+          出口总分: school["年级总分（含加分）"],
+          "出口 Z 分": outPutZScore,
+          "教学质量增量": outPutZScore - inputZScore,
+        });
+      }
+
+      resolve(data);
+      /* DO SOMETHING WITH workbook HERE */
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function calculateStandardDeviation(data: number[], mean: number): number {
+  const n = data.length;
+  if (n === 0) {
+    throw new Error("Data array cannot be empty");
+  }
+
+  const squaredDifferences = data.map((value) => Math.pow(value - mean, 2));
+  const sumOfSquaredDifferences = squaredDifferences.reduce(
+    (sum, value) => sum + value,
+    0
+  );
+  const variance = sumOfSquaredDifferences / n;
+  const standardDeviation = Math.sqrt(variance);
+
+  return standardDeviation;
 }
 
 export function run(

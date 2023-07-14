@@ -3,7 +3,7 @@ import {
 DEFAULT_SUBMISSIONS,
 REPORT_ID_EDU_STAGE_MAPPING,
 } from "@/constants/index";
-import { SchoolInfo, TeacherInfo } from "@/utils/process";
+import { runIncrement } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
 import type { FunctionalComponent } from "vue";
 import { ref, watch } from "vue";
@@ -11,55 +11,22 @@ import { ref, watch } from "vue";
 const route = useRoute();
 const reportId = route.params.id.toString();
 
-const teachers = ref<TeacherInfo[]>();
-const schools = ref<SchoolInfo[]>();
+const tableData = ref<object[]>();
 
 const edit = ref(true);
 const isGenerating = ref(false);
 const activeTab = ref("teacher");
 
-function calculateStandardDeviation(data: number[], mean: number): number {
-  const n = data.length;
-  if (n === 0) {
-    throw new Error("Data array cannot be empty");
-  }
-
-  const squaredDifferences = data.map((value) => Math.pow(value - mean, 2));
-  const sumOfSquaredDifferences = squaredDifferences.reduce(
-    (sum, value) => sum + value,
-    0
-  );
-  const variance = sumOfSquaredDifferences / n;
-  const standardDeviation = Math.sqrt(variance);
-
-  return standardDeviation;
-}
-
 const generate = async ({ fileList }) => {
-  // const file = fileList[0];
-  // if (!file) {
-  //   return;
-  // }
-
-  const schools = (await getSchools()) as SchoolInfo[];
-  const averageScore =
-    schools
-      .map((e) => e["年级总分（含加分）"])
-      .reduce((acc, val) => acc + val, 0) /
-    schools.map((e) => e.应考数).reduce((acc, val) => acc + val, 0);
-  console.log(averageScore);
-  const standardDeviation = calculateStandardDeviation(
-    schools.map((e) => e["年级总分（含加分）"] / e["应考数"]),
-    averageScore
-  );
-
-  for (const school of schools) {
-    console.log(
-      school.校区,
-      (school["年级总分（含加分）"] / school["应考数"] - averageScore) /
-        standardDeviation
-    );
+  const file = fileList[0];
+  if (!file) {
+    return;
   }
+
+  const res = await runIncrement(file, 9, await getSchools());
+  console.log(res);
+  tableData.value = res;
+  edit.value = false;
 };
 
 watch(
@@ -225,16 +192,7 @@ const Tabs: FunctionalComponent<
       </div>
     </div>
     <div class="w-full mt-24">
-      <TeacherResultTable
-        v-show="activeTab === 'teacher'"
-        v-if="!edit"
-        :teachers="(teachers as TeacherInfo[])"
-      />
-      <SchoolResultTable
-        v-show="activeTab === 'school'"
-        v-if="!edit"
-        :schools="(schools as SchoolInfo[])"
-      />
+      <ResultTable v-if="!edit" :data="tableData" />
     </div>
   </main>
 </template>
