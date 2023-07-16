@@ -22,6 +22,7 @@ const props = defineProps<{
 }>();
 
 const byRegion = ref(props.grade > 6);
+const enableConsolidationRate = ref(props.grade > 6);
 const xslx = ref<FileList | null>(null);
 
 const handleSubmit = () => {
@@ -46,11 +47,11 @@ const gradeName = GRADE_MAPPING[gradeKey];
         class="ltablet:max-w-full flex max-w-[425px] flex-col items-center gap-4 text-center md:flex-row md:text-left lg:max-w-full">
         <div>
           <h2 class="font-heading text-xl font-light leading-tight text-muted-800 dark:text-white">
-            <span>生成报表</span>
+            <span>导入年级数据</span>
           </h2>
           <p class="font-alt text-sm font-normal leading-normal">
             <span class="text-muted-500">
-              导入年级数据：包括学生成绩、教师、学校等</span>
+              导入年级学生成绩、教师、学校等数据</span>
           </p>
         </div>
       </div>
@@ -132,6 +133,9 @@ const gradeName = GRADE_MAPPING[gradeKey];
                       label-class-name="text-center" />
                   </el-table>
                 </div>
+              </div>
+              <div class="col-span-6">
+                <BaseCheckbox label="考核学校巩固率" v-model="enableConsolidationRate" id="enableConsolidationRate" />
               </div>
               <!-- <div class="ltablet:col-span-4 col-span-12 lg:col-span-4">
                 <div class="relative">

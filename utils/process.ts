@@ -481,7 +481,7 @@ type RunSchoolOptions = {
   getMetricWeightConfig: (
     school: SchoolInfo
   ) => (typeof DEFAULT_TEACHER_METRIC_CONFIG)[0];
-  // todo: 指标权重迟早要加的。它是个函数，或是个 item?
+  enableConsolidationRate: boolean;
 };
 
 function runSchools(
@@ -489,6 +489,12 @@ function runSchools(
   students: ExamResult[],
   options: RunSchoolOptions
 ) {
+  const {
+    totalScoreThresholdConfig,
+    fieldMapping,
+    getMetricWeightConfig,
+    enableConsolidationRate = false,
+  } = options;
   const schoolCount = SCHOOLS.length;
   const studentsBySchool = groupBy(students, "学校");
   // if (schoolCount != Object.keys(studentsBySchool).length) {
@@ -497,9 +503,6 @@ function runSchools(
 
   const schoolNames = SCHOOLS.map((e) => e.学校名称);
   const schoolNamesFromExamResult = Object.keys(studentsBySchool);
-
-  const { totalScoreThresholdConfig, fieldMapping, getMetricWeightConfig } =
-    options;
 
   // if (
   //   JSON.stringify(schoolNames.sort()) !=
@@ -569,9 +572,11 @@ function runSchools(
     school.优生率 = excellentCount / school.应考数;
 
     // todo: 巩固率的抽出来，最后算
-    school.巩固率 = attendCount / school.应考数;
-    school.巩固率计算得分 = 20 - (100 - school.巩固率 * 100) * 2;
-    school.巩固率实际得分 = 20 - (100 - school.巩固率 * 100) * 2;
+    if (enableConsolidationRate) {
+      school.巩固率 = attendCount / school.应考数;
+      school.巩固率计算得分 = 20 - (100 - school.巩固率 * 100) * 2;
+      school.巩固率实际得分 = 20 - (100 - school.巩固率 * 100) * 2;
+    }
 
     // todo: 学校综合成绩也分区域的
 
@@ -581,7 +586,7 @@ function runSchools(
       school.年级总平均分 * metricWeightConfig.averageScore +
       school.合格率 * 100 * metricWeightConfig.qualifiedRate +
       school.优生率 * 100 * metricWeightConfig.excellentRate +
-      school.巩固率实际得分;
+      (enableConsolidationRate ? school.巩固率实际得分 : 0);
   }
 
   return schools;
