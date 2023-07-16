@@ -34,6 +34,7 @@ const generate = async ({ fileList }) => {
     setTeachers(teachersData);
     setSchools(schoolsData);
 
+    console.log("生成完成")
     isGenerating.value = false;
     edit.value = false;
   } catch (error) {
