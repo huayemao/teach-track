@@ -30,30 +30,49 @@ export const DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION = [
 
 export const DEFAULT_TEACHER_METRIC_CONFIG = [
   {
+    regionName: "所有区域",
     averageScore: 0.5,
-    qualifiedRate: 0.2,
+    qualifiedRate: 0.3,
     excellentRate: 0.2,
   },
 ];
 
 export const DEFAULT_SCHOOL_METRIC_CONFIG_BY_REGION = [
   {
-    name: "城区",
+    regionName: "城区",
     averageScore: 0.1,
     qualifiedRate: 0.4,
     excellentRate: 0.3,
+    fullyQualifiedRate: 0,
   },
   {
-    name: "坝区",
+    regionName: "坝区",
     averageScore: 0.1,
     qualifiedRate: 0.6,
     excellentRate: 0.1,
+    fullyQualifiedRate: 0,
   },
   {
-    name: "山区",
+    regionName: "山区",
     averageScore: 0.1,
     qualifiedRate: 0.6,
     excellentRate: 0.1,
+    fullyQualifiedRate: 0,
+  },
+];
+
+// 小学
+/* 年级教学综合成绩=年级总平均分×0.1+年级总分合格率
+×0.4+年级总分优秀率×0.3+年级学生全科合格率×0.2。其中
+道德与法治、科学按成绩的 20%折算为学生总分。 */
+// todo: 考虑是否可合并？
+export const DEFAULT_SCHOOL_METRIC_CONFIG = [
+  {
+    regionName: "所有区域",
+    averageScore: 0.1,
+    qualifiedRate: 0.4,
+    excellentRate: 0.3,
+    fullyQualifiedRate: 0.2,
   },
 ];
 
@@ -108,8 +127,128 @@ export const SCHOOLS = [
 // 九年级语文又是 72
 // 要先录入各年级指标。。。
 
-export const SUBJECT_SCORE_METRICS = {
+export const SCORE_THRESHOLD_BY_GRADE = {
+  1: {
+    total: {
+      excellentThreshold: 180,
+      qualifiedThreshold: 120,
+    },
+    语文: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+    数学: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+  },
+  2: {
+    total: {
+      excellentThreshold: 180,
+      qualifiedThreshold: 120,
+    },
+    语文: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+    数学: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+  },
+  3: {
+    total: {
+      excellentThreshold: 212,
+      qualifiedThreshold: 144,
+    },
+    语文: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+    数学: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+    科学: {
+      excellentThreshold: 80,
+      qualifiedThreshold: 60,
+    },
+    道德与法治: {
+      excellentThreshold: 80,
+      qualifiedThreshold: 60,
+    },
+  },
+  4: {
+    total: {
+      excellentThreshold: 212,
+      qualifiedThreshold: 144,
+    },
+    语文: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+    数学: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+    科学: {
+      excellentThreshold: 80,
+      qualifiedThreshold: 60,
+    },
+    道德与法治: {
+      excellentThreshold: 80,
+      qualifiedThreshold: 60,
+    },
+  },
+  5: {
+    total: {
+      excellentThreshold: 212,
+      qualifiedThreshold: 144,
+    },
+    语文: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+    数学: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+    科学: {
+      excellentThreshold: 80,
+      qualifiedThreshold: 60,
+    },
+    道德与法治: {
+      excellentThreshold: 80,
+      qualifiedThreshold: 60,
+    },
+  },
+  6: {
+    total: {
+      excellentThreshold: 212,
+      qualifiedThreshold: 144,
+    },
+    语文: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+    数学: {
+      excellentThreshold: 90,
+      qualifiedThreshold: 60,
+    },
+    科学: {
+      excellentThreshold: 80,
+      qualifiedThreshold: 60,
+    },
+    道德与法治: {
+      excellentThreshold: 80,
+      qualifiedThreshold: 60,
+    },
+  },
   7: {
+    total: {
+      excellentThreshold: 360,
+      qualifiedThreshold: 270,
+    },
     语文: {
       excellentThreshold: 80,
       qualifiedThreshold: 60,
@@ -148,6 +287,10 @@ export const SUBJECT_SCORE_METRICS = {
     },
   },
   8: {
+    total: {
+      excellentThreshold: 400,
+      qualifiedThreshold: 300,
+    },
     语文: {
       excellentThreshold: 80,
       qualifiedThreshold: 60,
@@ -234,25 +377,32 @@ export const SUBJECT_SCORE_METRICS = {
       excellentThreshold: 60,
       qualifiedThreshold: 80,
     },
+    total: {
+      excellentThreshold: 492,
+      qualifiedThreshold: 384,
+    },
   },
 };
 
-export const TOTAL_SCORE_METRICS = {
-  7: {
-    excellentThreshold: 360,
-    qualifiedThreshold: 270,
+export const FILED_MAPPING_BY_GRADE = {
+  1: {
+    totalScore: "折算总分",
   },
-  8: {
-    excellentThreshold: 400,
-    qualifiedThreshold: 300,
+  2: {
+    totalScore: "折算总分",
   },
-  9: {
-    excellentThreshold: 492,
-    qualifiedThreshold: 384,
+  3: {
+    totalScore: "折算总分",
   },
-};
-
-export const KEY_MAPPING = {
+  4: {
+    totalScore: "折算总分",
+  },
+  5: {
+    totalScore: "折算总分",
+  },
+  6: {
+    totalScore: "折算总分",
+  },
   7: {
     totalScore: "折算总分",
   },
@@ -265,6 +415,8 @@ export const KEY_MAPPING = {
 };
 
 export const GRADE_MAPPING = {
+  1: "一年级",
+  2: "二年级",
   3: "三年级",
   4: "四年级",
   5: "五年级",
@@ -275,6 +427,8 @@ export const GRADE_MAPPING = {
 };
 
 export const DEFAULT_SUBMISSIONS = [
+  { grade: 1, eduStage: "Elementary" },
+  { grade: 2, eduStage: "Elementary" },
   { grade: 3, eduStage: "Elementary" },
   { grade: 4, eduStage: "Elementary" },
   { grade: 5, eduStage: "Elementary" },

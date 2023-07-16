@@ -122,19 +122,21 @@ onMounted(async () => {
   <div class="grid grid-cols-3 gap-6">
     <div>
       <div
-        class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl bg-muted-200 flex h-full flex-col border-0 p-8"
-      >
+        class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl bg-muted-200 flex h-full flex-col border-0 p-8">
         <div class="mb-5">
-          <h2
-            class="font-heading text-3xl font-light leading-tight text-muted-800 mb-2 dark:text-white"
-          >
-            <span>学校教学质量</span>
-          </h2>
-          <p class="font-alt text-sm font-normal leading-normal">
-            <span class="text-muted-400">
-              年级教学综合成绩|预测完成目标|九年级入学成绩表
-            </span>
-          </p>
+          <article class="prose">
+            <h2 class="font-heading text-3xl font-light leading-tight text-muted-800 mb-2 dark:text-white">
+              <span>教学质量分析工具（测试版）</span>
+            </h2>
+            <p>
+              注意事项：
+            </p>
+            <ul>
+              <li>程序运行在本地，数据会上传，避免丢失，请慎重保管</li>
+              <li>现有 Excel 中“校区”有时指学校名称，有时指校区名称，混淆使用会导致解析错误，务必修正列名，学校名称统一使用“学校”，校区名称统一使用“校区”</li>
+            </ul>
+            <!-- ... -->
+          </article>
         </div>
         <div class="mb-4 mt-auto flex items-center gap-2">
           <div class="text-4xl"><span>🎉</span></div>
@@ -142,19 +144,14 @@ onMounted(async () => {
             <p class="font-alt text-xs font-normal leading-normal">
               <span class="text-muted-400 mb-2">进度</span>
             </p>
-            <h4
-              class="font-heading text-base font-light leading-tight text-muted-800 dark:text-white"
-            >
+            <h4 class="font-heading text-base font-light leading-tight text-muted-800 dark:text-white">
               <span>报表制作完成</span>
             </h4>
           </div>
         </div>
         <div>
-          <button
-            data-v-71bb21a6=""
-            type="button"
-            class="is-button rounded-xl bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 h-11 w-full"
-          >
+          <button data-v-71bb21a6="" type="button"
+            class="is-button rounded-xl bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 h-11 w-full">
             <span>导出完整报表</span>
           </button>
         </div>
@@ -163,12 +160,9 @@ onMounted(async () => {
 
     <div>
       <div
-        class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-6"
-      >
+        class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-6">
         <div class="mb-8 flex items-center justify-between">
-          <h3
-            class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white"
-          >
+          <h3 class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
             <span>学科教师教学质量</span>
           </h3>
           <!-- <a
@@ -180,65 +174,41 @@ onMounted(async () => {
           </a> -->
         </div>
         <div class="mb-2 space-y-5">
-          <NuxtLink
-            class="flex items-center gap-3"
-            :to="{
-              name: $route.name?.toString() + '-grades-grade',
-              params: { grade: submission.grade },
-            }"
-            v-for="submission in DEFAULT_SUBMISSIONS.filter(
-              (e) => e.eduStage === stage
-            )"
-            :key="submission.grade"
-          >
-            <Item
-              :status="
-                allGradeData?.[submission.grade]?.teachers ? 'finished' : 'none'
-              "
-              :description="
-                allGradeData?.[submission.grade]?.teachers
-                  ? '已录入'
-                  : '待录入数据'
-              "
-              :name="GRADE_MAPPING[submission.grade] + '数据'"
-            />
+          <NuxtLink class="flex items-center gap-3" :to="{
+            name: $route.name?.toString() + '-grades-grade',
+            params: { grade: submission.grade },
+          }" v-for="submission in DEFAULT_SUBMISSIONS.filter(
+  (e) => e.eduStage === stage
+)" :key="submission.grade">
+            <Item :status="allGradeData?.[submission.grade]?.teachers ? 'finished' : 'none'
+              " :description="allGradeData?.[submission.grade]?.teachers
+    ? '已录入'
+    : '待录入数据'
+    " :name="GRADE_MAPPING[submission.grade] + '数据'" />
           </NuxtLink>
         </div>
       </div>
     </div>
 
     <div
-      class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-6"
-    >
+      class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-6">
       <div class="mb-8 flex items-center justify-between">
-        <h3
-          class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white"
-        >
+        <h3 class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
           <span>学校教学质量</span>
         </h3>
-        <NuxtLink
-          :to="{
-            name: $route.name?.toString() + '-school',
-          }"
-          class="router-link-active router-link-exact-active bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline"
-        >
+        <NuxtLink :to="{
+          name: $route.name?.toString() + '-school',
+        }"
+          class="router-link-active router-link-exact-active bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline">
           查看结果
         </NuxtLink>
       </div>
       <div class="mb-2 space-y-6">
-        <NuxtLink
-          v-for="item in items4school"
-          :class="{
-            'flex items-center gap-3': true,
-            'pointer-events-none': !item.to,
-          }"
-          :to="item.to"
-        >
-          <Item
-            :status="item.status"
-            :description="item.description"
-            :name="item.name"
-          />
+        <NuxtLink v-for="item in items4school" :class="{
+          'flex items-center gap-3': true,
+          'pointer-events-none': !item.to,
+        }" :to="item.to">
+          <Item :status="item.status" :description="item.description" :name="item.name" />
         </NuxtLink>
       </div>
     </div>

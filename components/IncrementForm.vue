@@ -140,7 +140,7 @@ const route = useRoute();
                     <el-table-column
                       header-align="center"
                       align="center"
-                      prop="学校名称"
+                      prop="学校"
                       label="学校"
                       label-class-name="text-center"
                     />
