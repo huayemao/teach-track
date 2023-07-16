@@ -1535,7 +1535,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <main>
+        <main class="min-h-[60vh]">
           <NuxtPage />
         </main>
       </div>

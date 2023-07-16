@@ -1,20 +1,20 @@
 <script setup lang="tsx">
 import { SchoolInfo, TeacherInfo, run } from "@/utils/process";
-import localforage from "localforage";
 import type { FunctionalComponent } from "vue";
 import { ref, watch } from "vue";
 
 const route = useRoute();
 
-const teachers = ref<TeacherInfo[]>();
-const schools = ref<SchoolInfo[]>();
+
+
 
 const edit = ref(true);
 const isGenerating = ref(false);
 const activeTab = ref("teacher");
 const grade = Number(route.params.grade);
 
-// todo: 已生成后信息用折叠面板收起来，添加编辑按钮，重新编辑后覆盖
+const { data: teachers, mutate: setTeachers, pending } = useStorageState<TeacherInfo[]>([grade, 'teachers'].join("-"));
+const { data: schools, mutate: setSchools } = useStorageState<SchoolInfo[]>([grade, 'schools'].join("-"));
 
 const handlePreview = () => {
   edit.value = true;
@@ -31,11 +31,9 @@ const generate = async ({ fileList }) => {
       grade
     );
 
-    localforage.setItem([grade, "teachers"].join("-"), teachersData);
-    localforage.setItem([grade, "schools"].join("-"), schoolsData);
+    setTeachers(teachersData);
+    setSchools(schoolsData);
 
-    teachers.value = teachersData;
-    schools.value = schoolsData;
     isGenerating.value = false;
     edit.value = false;
   } catch (error) {
@@ -56,18 +54,15 @@ watch(
   }
 );
 
-onMounted(async () => {
-  const [teachersData, schoolsData] = await Promise.all(
-    ["teachers", "schools"].map((e) =>
-      localforage.getItem([grade, e].join("-"))
-    )
-  );
-  if (teachersData && schoolsData) {
-    teachers.value = teachersData as TeacherInfo[];
-    schools.value = schoolsData as SchoolInfo[];
-    edit.value = false;
+watch(
+  () => teachers.value,
+  (v, prev) => {
+    if (!!v && !prev) {
+      edit.value = false;
+    }
   }
-});
+);
+
 
 /* todo: 画出结构示例 */
 const tabs = [
@@ -113,7 +108,11 @@ const Tabs: FunctionalComponent<
 };
 </script>
 <template>
-  <main>
+  <div v-if="pending" class="w-full h-full flex justify-center items-center">
+    <BasePlaceload class=" w-full rounded h-8" />
+  </div>
+
+  <template v-else>
     <div :class="{
       'h-0 hidden': !edit,
       'transition-all duration-300': true,
@@ -131,43 +130,43 @@ const Tabs: FunctionalComponent<
             <span class="text-muted-800 dark:text-white">元谋县</span>
           </h2>
           <!-- <span class="text-muted-400 mb-4 block font-sans text-base">
-            七年级
-          </span> -->
+              七年级
+            </span> -->
           <!-- <div class="mb-6 flex items-center gap-x-6">
-            <div
-              class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
-            >
-              <span class="text-muted-800 dark:text-muted-100 font-semibold">
-                1288 </span
-              ><span
-                class="text-muted-400 ltablet:text-base text-xs sm:text-sm lg:text-base"
+              <div
+                class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
               >
-                学生
-              </span>
-            </div>
-            <div
-              class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
-            >
-              <span class="text-muted-800 dark:text-muted-100 font-semibold">
-                138 </span
-              ><span
-                class="text-muted-400 ltablet:text-base text-xs sm:text-sm lg:text-base"
+                <span class="text-muted-800 dark:text-muted-100 font-semibold">
+                  1288 </span
+                ><span
+                  class="text-muted-400 ltablet:text-base text-xs sm:text-sm lg:text-base"
+                >
+                  学生
+                </span>
+              </div>
+              <div
+                class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
               >
-                教师
-              </span>
-            </div>
-            <div
-              class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
-            >
-              <span class="text-muted-800 dark:text-muted-100 font-semibold">
-                329 </span
-              ><span
-                class="text-muted-400 ltablet:text-base text-xs sm:text-sm lg:text-base"
+                <span class="text-muted-800 dark:text-muted-100 font-semibold">
+                  138 </span
+                ><span
+                  class="text-muted-400 ltablet:text-base text-xs sm:text-sm lg:text-base"
+                >
+                  教师
+                </span>
+              </div>
+              <div
+                class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
               >
-                学校
-              </span>
-            </div>
-          </div> -->
+                <span class="text-muted-800 dark:text-muted-100 font-semibold">
+                  329 </span
+                ><span
+                  class="text-muted-400 ltablet:text-base text-xs sm:text-sm lg:text-base"
+                >
+                  学校
+                </span>
+              </div>
+            </div> -->
         </div>
       </div>
       <div
@@ -185,5 +184,5 @@ const Tabs: FunctionalComponent<
       <TeacherResultTable v-show="activeTab === 'teacher'" v-if="!edit" :teachers="(teachers as TeacherInfo[])" />
       <SchoolResultTable v-show="activeTab === 'school'" v-if="!edit" :schools="(schools as SchoolInfo[])" />
     </div>
-  </main>
+  </template>
 </template>

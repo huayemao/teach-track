@@ -119,36 +119,25 @@ const Tabs: FunctionalComponent<
 };
 </script>
 <template>
-  <main>
-    <div
-      :class="{
-        'h-0 hidden': !edit,
-        'transition-all duration-300': true,
-      }"
-    >
-      <IncrementForm @confirm="generate" :loading="isGenerating" />
-    </div>
-    <div
-      v-show="!edit"
-      class="ltablet:h-[256px] dark:bg-muted-800 absolute start-0 top-0 h-[420px] w-full bg-white lg:h-[256px]"
-    ></div>
-    <div
-      v-show="!edit"
-      class="ltablet:h-36 ltablet:flex-row relative flex h-[290px] w-full flex-col lg:h-36 lg:flex-row"
-    >
-      <div
-        class="ltablet:flex-row relative z-10 flex w-full flex-col gap-6 lg:flex-row"
-      >
-        <div class="ltablet:text-left text-center lg:text-left">
-          <h2
-            class="font-heading text-xl font-semibold leading-normal ltablet:justify-start flex items-center justify-center gap-2 lg:justify-start"
-          >
-            <span class="text-muted-800 dark:text-white">元谋县</span>
-          </h2>
-          <!-- <span class="text-muted-400 mb-4 block font-sans text-base">
+  <div :class="{
+    'h-0 hidden': !edit,
+    'transition-all duration-300': true,
+  }">
+    <IncrementForm @confirm="generate" :loading="isGenerating" />
+  </div>
+  <div v-show="!edit"
+    class="ltablet:h-[256px] dark:bg-muted-800 absolute start-0 top-0 h-[420px] w-full bg-white lg:h-[256px]"></div>
+  <div v-show="!edit" class="ltablet:h-36 ltablet:flex-row relative flex h-[290px] w-full flex-col lg:h-36 lg:flex-row">
+    <div class="ltablet:flex-row relative z-10 flex w-full flex-col gap-6 lg:flex-row">
+      <div class="ltablet:text-left text-center lg:text-left">
+        <h2
+          class="font-heading text-xl font-semibold leading-normal ltablet:justify-start flex items-center justify-center gap-2 lg:justify-start">
+          <span class="text-muted-800 dark:text-white">元谋县</span>
+        </h2>
+        <!-- <span class="text-muted-400 mb-4 block font-sans text-base">
             七年级
           </span> -->
-          <!-- <div class="mb-6 flex items-center gap-x-6">
+        <!-- <div class="mb-6 flex items-center gap-x-6">
             <div
               class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
             >
@@ -183,31 +172,20 @@ const Tabs: FunctionalComponent<
               </span>
             </div>
           </div> -->
-        </div>
-      </div>
-      <div
-        class="ltablet:justify-start ltablet:ms-auto ltablet:mt-0 mt-4 flex shrink-0 justify-center lg:ms-auto lg:mt-0 lg:justify-start"
-      >
-        <button
-          @click="() => (edit = true)"
-          type="button"
-          class="is-button rounded is-button-default ltablet:w-auto ltablet:mx-0 mx-auto w-52 lg:mx-0 lg:w-auto"
-        >
-          <span>编辑</span>
-        </button>
-      </div>
-      <div
-        class="ltablet:bottom-[-30px] absolute bottom-[-48px] start-0 flex items-end gap-2 lg:bottom-[-30px]"
-      >
-        <Tabs
-          :activeKey="activeTab"
-          :data="tabs"
-          @change="handleTabChange"
-        ></Tabs>
       </div>
     </div>
-    <div class="w-full mt-24">
-      <ResultTable v-if="!edit" :data="tableData" />
+    <div
+      class="ltablet:justify-start ltablet:ms-auto ltablet:mt-0 mt-4 flex shrink-0 justify-center lg:ms-auto lg:mt-0 lg:justify-start">
+      <button @click="() => (edit = true)" type="button"
+        class="is-button rounded is-button-default ltablet:w-auto ltablet:mx-0 mx-auto w-52 lg:mx-0 lg:w-auto">
+        <span>编辑</span>
+      </button>
     </div>
-  </main>
+    <div class="ltablet:bottom-[-30px] absolute bottom-[-48px] start-0 flex items-end gap-2 lg:bottom-[-30px]">
+      <Tabs :activeKey="activeTab" :data="tabs" @change="handleTabChange"></Tabs>
+    </div>
+  </div>
+  <div class="w-full mt-24">
+    <ResultTable v-if="!edit" :data="tableData" />
+  </div>
 </template>

@@ -136,34 +136,21 @@ const Tabs: FunctionalComponent<
 };
 </script>
 <template>
-  <main>
-    <div
-      class="ltablet:h-36 ltablet:flex-row relative flex h-[290px] w-full flex-col lg:h-36 lg:flex-row"
-    >
-      <div
-        class="ltablet:flex-row relative z-10 flex w-full flex-col gap-6 lg:flex-row"
-      >
-        <div class="ltablet:text-left text-center lg:text-left">
-          <h2
-            class="font-heading text-xl font-semibold leading-normal ltablet:justify-start flex items-center justify-center gap-2 lg:justify-start"
-          >
-            <span class="text-muted-800 dark:text-white">元谋县</span>
-          </h2>
-        </div>
+  <div class="ltablet:h-36 ltablet:flex-row relative flex h-[290px] w-full flex-col lg:h-36 lg:flex-row">
+    <div class="ltablet:flex-row relative z-10 flex w-full flex-col gap-6 lg:flex-row">
+      <div class="ltablet:text-left text-center lg:text-left">
+        <h2
+          class="font-heading text-xl font-semibold leading-normal ltablet:justify-start flex items-center justify-center gap-2 lg:justify-start">
+          <span class="text-muted-800 dark:text-white">元谋县</span>
+        </h2>
       </div>
+    </div>
 
-      <div
-        class="ltablet:bottom-[-30px] absolute bottom-[-48px] start-0 flex items-end gap-2 lg:bottom-[-30px]"
-      >
-        <Tabs
-          :activeKey="activeTab"
-          :data="tabs"
-          @change="handleTabChange"
-        ></Tabs>
-      </div>
+    <div class="ltablet:bottom-[-30px] absolute bottom-[-48px] start-0 flex items-end gap-2 lg:bottom-[-30px]">
+      <Tabs :activeKey="activeTab" :data="tabs" @change="handleTabChange"></Tabs>
     </div>
-    <div class="w-full mt-24">
-      <ResultTable v-if="!edit" :data="tableData" />
-    </div>
-  </main>
+  </div>
+  <div class="w-full mt-24">
+    <ResultTable v-if="!edit" :data="tableData" />
+  </div>
 </template>

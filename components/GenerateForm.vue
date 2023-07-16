@@ -105,7 +105,7 @@ const gradeName = GRADE_MAPPING[gradeKey];
                   </div>
 
                   <div class="absolute top-0 right-0 inline-flex items-center gap-1 text-muted-400">
-                    <CheckBox label="按区域配置权重" v-model="byRegion" id="byRegion"></CheckBox>
+                    <BaseCheckbox label="按区域配置权重" v-model="byRegion" id="byRegion" />
                   </div>
                   <el-table v-if="!byRegion" :data="DEFAULT_TEACHER_METRIC_CONFIG" striped class="border">
                     <el-table-column v-for="item in Object.keys(DEFAULT_TEACHER_METRIC_CONFIG[0])" header-align="center"

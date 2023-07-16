@@ -520,10 +520,10 @@ function runSchools(
     // todo: 校验参数是否配置
 
     const qualifiedCount = totalScores.filter(
-      (e) => e > totalScoreThresholdConfig.qualifiedThreshold
+      (e) => e >= totalScoreThresholdConfig.qualifiedThreshold
     ).length;
     const excellentCount = totalScores.filter(
-      (e) => e > totalScoreThresholdConfig.excellentThreshold
+      (e) => e >= totalScoreThresholdConfig.excellentThreshold
     ).length;
 
     const schoolTotalScore = totalScores.reduce((acc, item) => {

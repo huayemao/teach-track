@@ -15,7 +15,6 @@ const handleSubmit = async () => {
 };
 </script>
 <template>
-  <main>
     <div
       class="nuxt-loading-indicator"
       style="
@@ -695,5 +694,4 @@ const handleSubmit = async () => {
         </div>
       </div>
     </div>
-  </main>
 </template>
