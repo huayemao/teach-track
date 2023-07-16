@@ -119,7 +119,7 @@ const Tabs: FunctionalComponent<
         'transition-all duration-300': true,
       }"
     >
-      <GenerateForm @confirm="generate" :loading="isGenerating" />
+      <GenerateForm @confirm="generate" :loading="isGenerating" :grade="grade"/>
     </div>
 
     <div

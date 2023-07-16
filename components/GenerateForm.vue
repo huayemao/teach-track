@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {
+DEFAULT_TEACHER_METRIC_CONFIG,
 DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION,
+FIELD_LABEL_MAPPING,
 GRADE_MAPPING,
 SCHOOLS,
 } from "@/constants/index";
@@ -16,15 +18,17 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   loading: boolean;
+  grade: number;
 }>();
 
-const byRegion = ref(false);
+const byRegion = ref(props.grade > 6);
 const xslx = ref<FileList | null>(null);
 
 const handleSubmit = () => {
   emit("confirm", {
     fileList: xslx.value,
     byRegion: byRegion.value,
+    // todo: 还有更多
   });
 };
 
@@ -99,18 +103,19 @@ const gradeName = GRADE_MAPPING[gradeKey];
                   <div class="text-muted-500 dark:text-muted-400 mb-2 select-none font-sans text-sm">
                     权重配置
                   </div>
+
                   <div class="absolute top-0 right-0 inline-flex items-center gap-1 text-muted-400">
                     <CheckBox label="按区域配置权重" v-model="byRegion" id="byRegion"></CheckBox>
                   </div>
+                  <el-table v-if="!byRegion" :data="DEFAULT_TEACHER_METRIC_CONFIG" striped class="border">
+                    <el-table-column v-for="item in Object.keys(DEFAULT_TEACHER_METRIC_CONFIG[0])" header-align="center"
+                      align="center" :key="item" :prop='item' :label="FIELD_LABEL_MAPPING['METRIC_CONFIG'][item]"
+                      label-class-name="text-center" />
+                  </el-table>
                   <el-table v-if="!!byRegion" :data="DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION" striped class="border">
-                    <el-table-column header-align="center" align="center" prop="name" label="类别"
-                      label-class-name="text-center" />
-                    <el-table-column header-align="center" align="center" prop="averageScore" label="平均分"
-                      label-class-name="text-center" />
-                    <el-table-column header-align="center" align="center" prop="qualifiedRate" label="合格率"
-                      label-class-name="text-center" />
-                    <el-table-column header-align="center" align="center" prop="excellentRate" label="优生率"
-                      label-class-name="text-center" />
+                    <el-table-column v-for="item in Object.keys(DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION[0])"
+                      :label="FIELD_LABEL_MAPPING['METRIC_CONFIG'][item]" header-align="center" align="center" :key="item"
+                      :prop='item' label-class-name="text-center" />
                   </el-table>
                 </div>
               </div>

@@ -1,21 +1,38 @@
+export const FIELD_LABEL_MAPPING = {
+  METRIC_CONFIG: {
+    regionName: "区域名称",
+    averageScore: "平均分",
+    qualifiedRate: "合格率",
+    excellentRate: "优生率",
+  },
+};
+
 export const DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION = [
   {
-    name: "城区",
+    regionName: "城区",
     averageScore: 0.5,
     qualifiedRate: 0.3,
     excellentRate: 0.2,
   },
   {
-    name: "坝区",
+    regionName: "坝区",
     averageScore: 0.5,
     qualifiedRate: 0.4,
     excellentRate: 0.1,
   },
   {
-    name: "山区",
+    regionName: "山区",
     averageScore: 0.5,
     qualifiedRate: 0.4,
     excellentRate: 0.1,
+  },
+];
+
+export const DEFAULT_TEACHER_METRIC_CONFIG = [
+  {
+    averageScore: 0.5,
+    qualifiedRate: 0.2,
+    excellentRate: 0.2,
   },
 ];
 

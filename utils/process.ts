@@ -101,13 +101,8 @@ const getConfigByTeacher = (teacher: TeacherInfo) => {
     throw Error("学校区域配置解析出错");
   }
   return DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION.find(
-    (e) => e.name === region
-  ) as {
-    name: string;
-    averageScore: number;
-    qualifiedRate: number;
-    excellentRate: number;
-  };
+    (e) => e.regionName === region
+  ) as (typeof DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION)["0"];
 };
 
 const getMetricWeightConfigBySchool = (schoolName: string) => {
