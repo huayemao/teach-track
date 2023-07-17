@@ -14,9 +14,9 @@ const files = [
 ].sort((a, b) => a.localeCompare(b))
 </script>
 <template>
-    <div class="prose">
+    <div class="prose ">
         <ul>
-            <li v-for="file in files"><a :href="`/sample/${file}`">{{ file }}</a></li>
+            <li v-for="file in files"><a class="dark:text-muted-50" :href="`/sample/${file}`">{{ file }}</a></li>
         </ul>
     </div>
 </template>

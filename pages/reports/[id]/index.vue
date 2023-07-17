@@ -125,7 +125,7 @@ onMounted(async () => {
       <div
         class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl bg-muted-200 flex h-full flex-col border-0 p-8">
         <div class="mb-5">
-          <article class="prose">
+          <article class="prose dark:text-muted-50">
             <h2 class="font-heading text-3xl font-light leading-tight text-muted-800 mb-2 dark:text-white">
               <span>教学质量分析工具（测试版）</span>
             </h2>
@@ -136,7 +136,7 @@ onMounted(async () => {
               <li>程序运行在本地，数据不会上传，切换设备或清空浏览器数据后，数据将丢失，请慎重保管</li>
               <li>现有 Excel 中“校区”有时指学校名称，有时指校区名称，混淆使用会导致解析错误，务必修正列名，学校名称统一使用“学校”，校区名称统一使用“校区”</li>
               <li>
-                <NuxtLink to="/sample">导入的 Excel 数据样例</NuxtLink>
+                <NuxtLink class="dark:text-muted-50" to="/sample">导入的 Excel 数据样例</NuxtLink>
               </li>
             </ul>
             <!-- ... -->
@@ -200,12 +200,7 @@ onMounted(async () => {
         <h3 class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
           <span>学校教学质量</span>
         </h3>
-        <NuxtLink :to="{
-          name: $route.name?.toString() + '-school',
-        }"
-          class="router-link-active router-link-exact-active bg-muted-100 hover:bg-muted-200 dark:bg-muted-700 dark:hover:bg-muted-900 text-primary-500 rounded-lg px-4 py-2 font-sans text-sm font-medium underline-offset-4 transition-colors duration-300 hover:underline">
-          查看结果
-        </NuxtLink>
+        <BaseButton condensed>配置参数</BaseButton>
       </div>
       <div class="mb-2 space-y-6">
         <NuxtLink v-for="item in items4school" :class="{
