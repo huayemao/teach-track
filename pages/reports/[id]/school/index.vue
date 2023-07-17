@@ -58,7 +58,7 @@ onMounted(async () => {
   >;
   const predictData = (await localforage.getItem(
     [eduStage, "predict"].join("-")
-  )) as { 校区: string; 目标完成总得分: string }[];
+  )) as { 学校: string; 目标完成总得分: string }[];
   const incrementData = (await localforage.getItem(
     [eduStage, "increment"].join("-")
   )) as SchoolIncrement[];
@@ -76,13 +76,13 @@ onMounted(async () => {
 
     for (const [grade, weight] of Object.entries(config)) {
       const baseScore = schoolsByGrade[grade].schools.find(
-        (e) => e.校区 === school.校区
+        (e) => e.学校 === school.学校
       ).综合成绩;
       base += baseScore * weight;
     }
 
     const increment = incrementData.find(
-      (e) => e.学校 == school.校区
+      (e) => e.学校 == school.学校
     ).教学质量增量;
 
     data.push({

@@ -84,7 +84,7 @@ const items4school = computed(() => {
       name: "年级教学综合成绩",
       description: gradeResultFinished
         ? "已生成"
-        : "待录入数据：各年级考试成绩",
+        : "录入各年级考试成绩等数据后即可生成",
       status: gradeResultFinished ? "finished" : "",
       to: "",
     },
