@@ -67,7 +67,7 @@ onMounted(async () => {
   const schools = await getSchools();
 
   if (!schools) {
-    alert("请先录入九年级中考成绩");
+    ElNotification.warning("请先录入九年级中考成绩");
   }
 
   // todo: 平均分要加一列按加分之后算的。。。

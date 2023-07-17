@@ -12,7 +12,6 @@ const route = useRoute();
 
 const reportId = route.params.id.toString();
 
-
 const { eduStage } = useReport()
 
 const { data: predictData } = useStorageState([eduStage, "predict"].join("-"));
@@ -200,7 +199,7 @@ onMounted(async () => {
         <h3 class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
           <span>学校教学质量</span>
         </h3>
-        <BaseButton condensed>配置参数</BaseButton>
+        <BaseButton condensed data-tooltip="Time for a nap!">配置参数</BaseButton>
       </div>
       <div class="mb-2 space-y-6">
         <NuxtLink v-for="item in items4school" :class="{

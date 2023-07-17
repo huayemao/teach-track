@@ -639,7 +639,7 @@ function runTeachers(
         )
       );
       // todo: 这里要核实
-      alert("在教师表中未找到学生班级: " + key);
+      ElNotification.warning("在教师表中未找到学生班级: " + key);
       // throw Error("在教师表中未找到学生班级: " + key);
     }
 
