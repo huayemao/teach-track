@@ -474,7 +474,6 @@ export const SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR = [
   },
 ];
 
-
 export const SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY = [
   {
     key: 7,
@@ -500,5 +499,45 @@ export const SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY = [
     key: "increment",
     weight: 1,
     label: "学校九年级教学质量增量",
+  },
+];
+
+export type Report = {
+  id: number;
+  attributes: {
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    eduStage: "小学" | "初中";
+    year: number;
+    region: string;
+  };
+};
+
+export const DEFAULT_REPORTS = [
+  {
+    id: 1,
+    attributes: {
+      eduStage: "初中",
+      title: "教学质量分析",
+      year: 2021,
+      region: "元谋县",
+      createdAt: "111",
+      publishedAt: "111",
+      updatedAt: "111",
+    },
+  },
+  {
+    id: 2,
+    attributes: {
+      eduStage: "小学",
+      title: "教学质量分析",
+      year: 2021,
+      region: "元谋县",
+      createdAt: "111",
+      publishedAt: "111",
+      updatedAt: "111",
+    },
   },
 ];

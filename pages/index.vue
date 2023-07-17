@@ -1,25 +1,7 @@
 <script setup lang="ts">
-type Report = {
-  id: number;
-  attributes: {
-    title: string;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-    eduStage: "小学" | "初中";
-    year: number;
-    region: string;
-  };
-};
+import { DEFAULT_REPORTS, Report } from '@/constants/index';
+import { getFullReportTitle } from '@/utils/biz/report';
 
-type Meta = {
-  pagination: {
-    page: number;
-    pageSize: number;
-    pageCount: number;
-    total: number;
-  };
-};
 
 type Response = {
   data: Report[];
@@ -29,33 +11,19 @@ type Response = {
 // const { data } = useFetch<Response>("/reports", {
 //   $fetch: fetchWithAuth,
 // });
+type Meta = {
+  pagination: {
+    page: number;
+    pageSize: number;
+    pageCount: number;
+    total: number;
+  };
+};
 
-const data: Report[] = [
-  {
-    id: 1,
-    attributes: {
-      eduStage: "初中",
-      title: "教学质量分析",
-      year: 2021,
-      region: "元谋县",
-      createdAt: "111",
-      publishedAt: "111",
-      updatedAt: "111",
-    },
-  },
-  {
-    id: 2,
-    attributes: {
-      eduStage: "小学",
-      title: "教学质量分析",
-      year: 2021,
-      region: "元谋县",
-      createdAt: "111",
-      publishedAt: "111",
-      updatedAt: "111",
-    },
-  },
-];
+
+
+const data: Report[] = DEFAULT_REPORTS;
+
 </script>
 <template>
   <div>
@@ -134,15 +102,7 @@ const data: Report[] = [
                   </div>
                   <NuxtLink :to="`reports/${item.id}`">
                     <h4 class="font-heading text-sm font-medium leading-tight text-muted-700 dark:text-muted-100">
-                      <span>{{
-                        item.attributes.region +
-                        item.attributes.year +
-                        "-" +
-                        (item.attributes.year + 1) +
-                        "学年" +
-                        item.attributes.title +
-                        `（${item.attributes.eduStage}）`
-                      }}</span>
+                      <span>{{ getFullReportTitle(item) }}</span>
                     </h4>
                     <p class="font-alt text-xs font-normal leading-tight text-muted-500 dark:text-muted-400">
                       <span>测试数据</span>

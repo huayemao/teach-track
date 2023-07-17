@@ -18,6 +18,7 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps<{
+  title: string;
   loading: boolean;
   grade: number;
 }>();
@@ -30,9 +31,10 @@ const handleSubmit = () => {
   emit("confirm", {
     fileList: xslx.value,
     byRegion: byRegion.value,
-    // todo: 还有更多
   });
 };
+
+/* todo: 画出结构示例 */
 
 const route = useRoute();
 if (!route.params.grade) {
@@ -72,8 +74,8 @@ const gradeName = GRADE_MAPPING[gradeKey];
             <div>
               <div>
                 <div class="relative mb-5 flex flex-col items-center justify-center gap-4">
-                  <div class="relative">
-                    2022元谋县教学质量分析报表——{{ gradeName }}
+                  <div class="text-xl font-semibold text-muted-600">
+                    {{ gradeName }}
                   </div>
                 </div>
                 <div class="grid grid-cols-12 gap-4">

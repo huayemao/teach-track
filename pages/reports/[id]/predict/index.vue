@@ -11,7 +11,7 @@ import { ref, watch } from "vue";
 
 const route = useRoute();
 const reportId = route.params.id.toString();
-const { eduStage } = useReport();
+const { attributes: { eduStage } } = useReport();
 
 const edit = ref(true);
 const isGenerating = ref(false);

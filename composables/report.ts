@@ -1,12 +1,10 @@
-import { REPORT_ID_EDU_STAGE_MAPPING } from "@/constants/index";
+import { DEFAULT_REPORTS, Report } from "@/constants/index";
 
 export const useReport = () => {
   const route = useRoute();
 
   const reportId = route.params.id.toString();
 
-  const eduStage = REPORT_ID_EDU_STAGE_MAPPING[reportId];
-  return {
-    eduStage,
-  };
+  const report = DEFAULT_REPORTS.find((e) => e.id == reportId) as Report;
+  return report;
 };

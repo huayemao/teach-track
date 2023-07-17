@@ -1,11 +1,16 @@
 <script setup lang="tsx">
+import { GRADE_MAPPING } from "@/constants/index";
+import { getFullReportTitle } from "@/utils/biz/report";
 import { SchoolInfo, TeacherInfo, run } from "@/utils/process";
 import { ref, watch } from "vue";
 import XLSX from 'xlsx';
 
 const route = useRoute();
-
+const report = useReport()
 // todo: 渲染性能问题
+
+const gradeKey = Number(route.params.grade);
+const gradeName = GRADE_MAPPING[gradeKey];
 
 const edit = ref(true);
 const isGenerating = ref(false);
@@ -48,7 +53,6 @@ const handleCancel = () => {
     edit.value = false
   }
   else {
-    console.log(route.name)
     navigateTo({
       name: route.name?.toString().replace('-grades-grade', '')
     })
@@ -76,17 +80,6 @@ watch(
   }
 );
 
-
-/* todo: 画出结构示例 */
-const tabs = [
-  { title: "教师", key: "teacher" },
-  { title: "学校", key: "school" },
-];
-
-const handleTabChange = (v: string) => {
-  activeTab.value = v;
-};
-
 </script>
 <template>
   <div v-if="pending" class="w-full h-full flex justify-center items-center">
@@ -98,7 +91,8 @@ const handleTabChange = (v: string) => {
       'h-0 hidden': !edit,
       'transition duration-300': true,
     }">
-      <GenerateForm @confirm="generate" @cancel="handleCancel" :loading="isGenerating" :grade="grade" />
+      <GenerateForm :title="getFullReportTitle(report)" @confirm="generate" @cancel="handleCancel" :loading="isGenerating"
+        :grade="grade" />
     </div>
     <!-- 这是为了让顶端变白 -->
     <div v-show="!edit">
@@ -108,8 +102,9 @@ const handleTabChange = (v: string) => {
           <div class="ltablet:text-left text-center lg:text-left">
             <h2
               class="font-heading text-xl font-semibold leading-normal ltablet:justify-start flex items-center justify-center gap-2 lg:justify-start">
-              <span class="text-muted-800 dark:text-white">元谋县</span>
+              <span class="text-muted-800 dark:text-white">{{ getFullReportTitle(report) }}</span>
             </h2>
+            <span class="text-muted-400 mb-4 block font-sans text-base"> {{ gradeName }} </span>
           </div>
         </div>
         <div

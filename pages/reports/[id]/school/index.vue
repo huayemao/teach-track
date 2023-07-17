@@ -8,8 +8,7 @@ import type { FunctionalComponent } from "vue";
 import { ref, watch } from "vue";
 
 const route = useRoute();
-const reportId = route.params.id.toString();
-const { eduStage } = useReport();
+const { attributes: { eduStage } } = useReport();
 const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === eduStage).map(
   (e) => e.grade
 );

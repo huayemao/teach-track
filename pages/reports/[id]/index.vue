@@ -14,7 +14,7 @@ import compact from 'lodash/compact';
 
 
 const route = useRoute();
-const { eduStage } = useReport()
+const { attributes: { eduStage } } = useReport()
 
 const schoolResultConfig = eduStage === 'Junior' ? SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR :
   SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY
