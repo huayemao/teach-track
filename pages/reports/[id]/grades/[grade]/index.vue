@@ -33,9 +33,9 @@ const generate = async ({ fileList }) => {
 
     setTeachers(teachersData);
     setSchools(schoolsData);
-
     console.log("生成完成")
     isGenerating.value = false;
+    alert("生成完成")
     edit.value = false;
   } catch (error) {
     const message = typeof error === 'string' ? error : error?.message || '未知错误'

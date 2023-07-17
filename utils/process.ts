@@ -449,7 +449,8 @@ export async function run(
       schoolsFromExcel as SchoolInfo[],
       studentsFromExcel as ExamResult[],
       {
-        totalScoreThresholdConfig: SCORE_THRESHOLD_BY_GRADE[grade].total,
+        /* todo: 这里的类型问题？ */
+        scoreThresholdConfig: SCORE_THRESHOLD_BY_GRADE[grade],
         fieldMapping: FILED_MAPPING_BY_GRADE[grade],
         getMetricWeightConfig:
           grade < 7
@@ -472,15 +473,18 @@ export async function run(
   }
 }
 
-const THRESHOLD_CONFIG = Object.values(SCORE_THRESHOLD_BY_GRADE)[0].total;
+const SCORE_THRESHOLD_CONFIG = Object.values(SCORE_THRESHOLD_BY_GRADE)[0];
+const SUBJECT_SCORE_THRESHOLD_CONFIG = Object.values(
+  SCORE_THRESHOLD_BY_GRADE
+)[0];
 const FILED_MAPPING = Object.values(FILED_MAPPING_BY_GRADE)[0];
 
 type RunSchoolOptions = {
-  totalScoreThresholdConfig: typeof THRESHOLD_CONFIG;
+  scoreThresholdConfig: typeof SCORE_THRESHOLD_CONFIG;
   fieldMapping: typeof FILED_MAPPING;
   getMetricWeightConfig: (
     school: SchoolInfo
-  ) => (typeof DEFAULT_TEACHER_METRIC_CONFIG)[0];
+  ) => (typeof DEFAULT_SCHOOL_METRIC_CONFIG)[0];
   enableConsolidationRate: boolean;
 };
 
@@ -490,7 +494,7 @@ function runSchools(
   options: RunSchoolOptions
 ) {
   const {
-    totalScoreThresholdConfig,
+    scoreThresholdConfig,
     fieldMapping,
     getMetricWeightConfig,
     enableConsolidationRate = false,
@@ -511,6 +515,8 @@ function runSchools(
   //   alert("学校与系统中配置的不一致");
   // }
 
+  console.log(111, scoreThresholdConfig);
+
   for (const [schoolName, students] of Object.entries(studentsBySchool)) {
     const school = schools.find((e) => e.学校 === schoolName);
     if (!school) {
@@ -523,10 +529,10 @@ function runSchools(
     // todo: 校验参数是否配置
 
     const qualifiedCount = totalScores.filter(
-      (e) => e >= totalScoreThresholdConfig.qualifiedThreshold
+      (e) => e >= scoreThresholdConfig.total.qualifiedThreshold
     ).length;
     const excellentCount = totalScores.filter(
-      (e) => e >= totalScoreThresholdConfig.excellentThreshold
+      (e) => e >= scoreThresholdConfig.total.excellentThreshold
     ).length;
 
     const schoolTotalScore = totalScores.reduce((acc, item) => {
@@ -536,24 +542,19 @@ function runSchools(
     const averageScore = schoolTotalScore / school.应考数;
 
     // todo: 全科合格率
-    // const subjects = [
-    //   "语文",
-    //   "数学",
-    //   "英语",
-    //   "道德与法治",
-    //   "历史",
-    //   "地理",
-    //   "生物",
-    // ];
-    // const fullyQualifiedCount = students.filter((s) => {
-    //   return subjects.every((subject) => {
-    //     const studentScore = Number(s[subject as keyof ExamResult]);
-    //     const qualifiedScore =
-    //       SUBJECT_SCORE_METRICS[subject as keyof typeof SUBJECT_SCORE_METRICS]
-    //         .qualifiedThreshold;
-    //     return studentScore >= qualifiedScore;
-    //   });
-    // }).length;
+    const subjectNames = Object.keys(scoreThresholdConfig).filter(
+      (e) => e !== "total"
+    );
+
+    const fullyQualifiedCount = students.filter((s) => {
+      return subjectNames.every((subject) => {
+        const studentScore = Number(s[subject as keyof ExamResult]);
+        const qualifiedScore =
+          scoreThresholdConfig[subject as keyof typeof scoreThresholdConfig]
+            .qualifiedThreshold;
+        return studentScore >= qualifiedScore;
+      });
+    }).length;
 
     school.年级总分 = schoolTotalScore;
 
@@ -564,7 +565,8 @@ function runSchools(
       .reduce((arr, score) => arr + score, 0);
     school.年级总平均分 = averageScore;
     school.实考数 = attendCount;
-    // school.全科合格数 = fullyQualifiedCount;
+    school.全科合格数 = fullyQualifiedCount;
+    school.全科合格率 = fullyQualifiedCount / school.应考数;
 
     school.合格数 = qualifiedCount;
     school.合格率 = qualifiedCount / school.应考数;
@@ -586,6 +588,7 @@ function runSchools(
       school.年级总平均分 * metricWeightConfig.averageScore +
       school.合格率 * 100 * metricWeightConfig.qualifiedRate +
       school.优生率 * 100 * metricWeightConfig.excellentRate +
+      school.全科合格率 * 100 * metricWeightConfig.fullyQualifiedRate +
       (enableConsolidationRate ? school.巩固率实际得分 : 0);
   }
 
