@@ -557,10 +557,14 @@ function runSchools(
     school.年级总分 = schoolTotalScore;
 
     // todo: 这个是特殊逻辑，只对九年级有意义，目的是为了算 z 分？但是会对别的年级的数据展示造成影响。。。
+    // 要想办法去掉
 
-    school["年级总分（含加分）"] = students
-      .map((e) => Number(e["总分（含加分）"]))
-      .reduce((arr, score) => arr + score, 0);
+    if (students.some((s) => !!s["年级总分（含加分）"])) {
+      school["年级总分（含加分）"] = students
+        .map((e) => Number(e["总分（含加分）"]))
+        .reduce((arr, score) => arr + score, 0);
+    }
+
     school.年级总平均分 = averageScore;
     school.实考数 = attendCount;
     school.全科合格数 = fullyQualifiedCount;
@@ -688,10 +692,13 @@ function runTeachers(
   }
 
   for (const teacher of teachers) {
-    // todo: 这里要传个大对象，byRegion、config
     const config = getMetricWeightConfig(teacher);
 
     const { 平均分, 合格率, 优生率, 教科研加分 } = teacher;
+
+    // todo: 这个应该在数据处理之前做
+    teacher.教科研加分 = isNaN(教科研加分) || !教科研加分 ? 0 : 教科研加分;
+
     const grade =
       Number(平均分) * config.averageScore +
       Number(合格率) * config.qualifiedRate * 100 +

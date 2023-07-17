@@ -1,11 +1,11 @@
 <script setup lang="tsx">
 import { SchoolInfo, TeacherInfo, run } from "@/utils/process";
 import { ref, watch } from "vue";
+import XLSX from 'xlsx';
 
 const route = useRoute();
 
 // todo: 渲染性能问题
-
 
 const edit = ref(true);
 const isGenerating = ref(false);
@@ -15,9 +15,6 @@ const grade = Number(route.params.grade);
 const { data: teachers, mutate: setTeachers, pending } = useStorageState<TeacherInfo[]>([grade, 'teachers'].join("-"));
 const { data: schools, mutate: setSchools } = useStorageState<SchoolInfo[]>([grade, 'schools'].join("-"));
 
-const handlePreview = () => {
-  edit.value = true;
-};
 const generate = async ({ fileList }) => {
   isGenerating.value = true;
   const file = fileList[0];
@@ -56,6 +53,18 @@ const handleCancel = () => {
       name: route.name?.toString().replace('-grades-grade', '')
     })
   }
+}
+
+const output = () => {
+  const workbook = XLSX.utils.book_new();
+  if (teachers.value && schools.value) {
+    const teacherSheet = XLSX.utils.json_to_sheet(teachers.value);
+    const schoolSheet = XLSX.utils.json_to_sheet(schools.value)
+    XLSX.utils.book_append_sheet(workbook, teacherSheet, '教师成绩');
+    XLSX.utils.book_append_sheet(workbook, schoolSheet, '年级学校成绩');
+    XLSX.writeFile(workbook, 'output.xlsx');
+  }
+
 }
 
 watch(
@@ -104,11 +113,14 @@ const handleTabChange = (v: string) => {
           </div>
         </div>
         <div
-          class="ltablet:justify-start ltablet:ms-auto ltablet:mt-0 mt-4 flex shrink-0 justify-center lg:ms-auto lg:mt-0 lg:justify-start">
-          <button @click="() => (edit = true)" type="button"
-            class="is-button rounded is-button-default ltablet:w-auto ltablet:mx-0 mx-auto w-52 lg:mx-0 lg:w-auto">
-            <span>编辑</span>
-          </button>
+          class="gap-2 ltablet:justify-start ltablet:ms-auto ltablet:mt-0 mt-4 flex shrink-0 justify-center lg:ms-auto lg:mt-0 lg:justify-start">
+          <BaseButton condensed color="primary" @click="output" :disabled="!(teachers && schools)">
+            <span>导出</span>
+            <Icon name="lucide:arrow-right" class="me-1 h-4 w-4" />
+          </BaseButton>
+          <BaseButton condensed @click="() => (edit = true)"><span>编辑</span>
+            <Icon name="lucide:edit" class="me-1 h-4 w-4" />
+          </BaseButton>
         </div>
       </div>
       <div class="w-full relative -top-[5.2rem] z-10">
