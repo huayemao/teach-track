@@ -2,20 +2,21 @@
 import { useStorageState } from "@/composables/storage";
 import {
 DEFAULT_SUBMISSIONS,
-GRADE_MAPPING,
-REPORT_ID_EDU_STAGE_MAPPING,
+GRADE_MAPPING
 } from "@/constants/index";
 import { SchoolInfo, TeacherInfo } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
+import compact from 'lodash/compact';
 
 const route = useRoute();
 
 const reportId = route.params.id.toString();
 
-const stage = REPORT_ID_EDU_STAGE_MAPPING[reportId];
 
-const { data: predictData } = useStorageState([stage, "predict"].join("-"));
-const { data: incrementData } = useStorageState([stage, "increment"].join("-"));
+const { eduStage } = useReport()
+
+const { data: predictData } = useStorageState([eduStage, "predict"].join("-"));
+const { data: incrementData } = useStorageState([eduStage, "increment"].join("-"));
 
 const allGradeData = ref<
   Record<
@@ -78,7 +79,7 @@ const items4school = computed(() => {
     allGradeData.value &&
     Object.values(allGradeData.value).every((e) => e?.schools);
 
-  return [
+  return compact([
     {
       name: "年级教学综合成绩",
       description: gradeResultFinished
@@ -91,12 +92,12 @@ const items4school = computed(() => {
       name: "预测完成目标",
       description: predictData.value
         ? "已生成"
-        : "待录入数据：九年级预测目标完成情况统计表",
+        : `待录入数据：${eduStage === 'Junior' ? '九年级' : '六年级'}预测目标完成情况统计表`,
       to: { name: route.name?.toString() + "-predict" },
       status: predictData.value ? "finished" : "",
     },
     // todo: 实际要导入的是九年级入学成绩。。。
-    {
+    eduStage === 'Junior' && {
       name: "教学质量增量",
       description: incrementData.value
         ? "已生成"
@@ -104,11 +105,11 @@ const items4school = computed(() => {
       to: { name: route.name?.toString() + "-increment" },
       status: incrementData.value ? "finished" : "",
     },
-  ];
+  ]);
 });
 
 onMounted(async () => {
-  const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === stage).map(
+  const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === eduStage).map(
     (e) => e.grade
   );
 
@@ -181,7 +182,7 @@ onMounted(async () => {
             name: $route.name?.toString() + '-grades-grade',
             params: { grade: submission.grade },
           }" v-for="submission in DEFAULT_SUBMISSIONS.filter(
-  (e) => e.eduStage === stage
+  (e) => e.eduStage === eduStage
 )" :key="submission.grade">
             <Item :status="allGradeData?.[submission.grade]?.teachers ? 'finished' : 'none'
               " :description="allGradeData?.[submission.grade]?.teachers
