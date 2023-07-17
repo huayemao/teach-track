@@ -515,8 +515,6 @@ function runSchools(
   //   alert("学校与系统中配置的不一致");
   // }
 
-  console.log(111, scoreThresholdConfig);
-
   for (const [schoolName, students] of Object.entries(studentsBySchool)) {
     const school = schools.find((e) => e.学校 === schoolName);
     if (!school) {

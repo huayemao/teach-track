@@ -2,18 +2,24 @@
 import { useStorageState } from "@/composables/storage";
 import {
 DEFAULT_SUBMISSIONS,
-GRADE_MAPPING
+GRADE_MAPPING,
+SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY,
+SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR
 } from "@/constants/index";
 import { SchoolInfo, TeacherInfo } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
 import compact from 'lodash/compact';
 
+
+
+
 const route = useRoute();
-
-const reportId = route.params.id.toString();
-
 const { eduStage } = useReport()
 
+const schoolResultConfig = eduStage === 'Junior' ? SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR :
+  SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY
+
+const dialogOpened = ref(false)
 const { data: predictData } = useStorageState([eduStage, "predict"].join("-"));
 const { data: incrementData } = useStorageState([eduStage, "increment"].join("-"));
 
@@ -141,7 +147,7 @@ onMounted(async () => {
             <!-- ... -->
           </article>
         </div>
-        <div class="mb-4 mt-auto flex items-center gap-2">
+        <!-- <div class="mb-4 mt-auto flex items-center gap-2">
           <div class="text-4xl"><span>🎉</span></div>
           <div>
             <p class="font-alt text-xs font-normal leading-normal">
@@ -157,7 +163,7 @@ onMounted(async () => {
             class="is-button rounded-xl bg-primary-500 dark:bg-primary-500 hover:enabled:bg-primary-400 dark:hover:enabled:bg-primary-400 text-white hover:enabled:shadow-lg hover:enabled:shadow-primary-500/50 dark:hover:enabled:shadow-primary-800/20 focus-visible:outline-primary-400/70 focus-within:outline-primary-400/70 focus-visible:bg-primary-500 active:enabled:bg-primary-500 dark:focus-visible:outline-primary-400 dark:focus-within:outline-primary-400 dark:focus-visible:bg-primary-500 dark:active:enabled:bg-primary-500 h-11 w-full">
             <span>导出完整报表</span>
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -193,22 +199,33 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div
-      class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-6">
-      <div class="mb-8 flex items-center justify-between">
-        <h3 class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
-          <span>学校教学质量</span>
-        </h3>
-        <BaseButton condensed data-tooltip="Time for a nap!">配置参数</BaseButton>
-      </div>
-      <div class="mb-2 space-y-6">
-        <NuxtLink v-for="item in items4school" :class="{
-          'flex items-center gap-3': true,
-          'pointer-events-none': !item.to,
-        }" :to="item.to">
-          <Item :status="item.status" :description="item.description" :name="item.name" />
-        </NuxtLink>
+    <div>
+      <div
+        class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-xl p-6">
+        <div class="mb-8 flex items-center justify-between">
+          <h3 class="font-heading text-base font-semibold leading-tight text-muted-800 dark:text-white">
+            <span>学校教学质量</span>
+          </h3>
+          <BaseButton condensed @click="() => dialogOpened = true">配置参数</BaseButton>
+        </div>
+        <div class="mb-2 space-y-6">
+          <NuxtLink v-for="item in items4school" :class="{
+            'flex items-center gap-3': true,
+            'pointer-events-none': !item.to,
+          }" :to="item.to">
+            <Item :status="item.status" :description="item.description" :name="item.name" />
+          </NuxtLink>
+        </div>
+        <div class="mt-4 w-full flex justify-end">
+          <BaseButton color="primary" shadow="flat" :to="{ name: $route.name?.toString() + '-school' }">查看结果</BaseButton>
+        </div>
       </div>
     </div>
   </div>
+  <el-dialog title="教学质量计算系数" v-model="dialogOpened">
+    <el-table border :data="schoolResultConfig">
+      <el-table-column prop="label" header-align="center" align="center" label="项目" />
+      <el-table-column prop="weight" header-align="center" align="center" label="系数" />
+    </el-table>
+  </el-dialog>
 </template>

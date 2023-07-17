@@ -14,6 +14,7 @@ type Payload = {
 };
 const emit = defineEmits<{
   (e: "confirm", payload: Payload): void;
+  (e: "cancel"): void;
 }>();
 
 const props = defineProps<{
@@ -56,14 +57,10 @@ const gradeName = GRADE_MAPPING[gradeKey];
         </div>
       </div>
       <div class="mt-4 flex items-center justify-center gap-2 md:mt-0 md:justify-start">
-        <button type="button"
-          class="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none text-muted-700 bg-white border-muted-300 dark:text-white dark:bg-muted-700 dark:border-muted-600 dark:hover:enabled:bg-muted-600 hover:enabled:bg-muted-50 dark:active:enabled:bg-muted-700/70 active:enabled:bg-muted-100 rounded-md">
-          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img"
-            class="icon h-3 w-3" width="1em" height="1em" viewBox="0 0 24 24">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="m12 19l-7-7l7-7m7 7H5"></path>
-          </svg><span>取消</span>
-        </button>
+        <BaseButton @click="() => $emit('cancel')" condensed>
+          <Icon name="lucide:arrow-left" class="h-4 w-4" />
+          <span>取消</span>
+        </BaseButton>
       </div>
     </div>
     <div

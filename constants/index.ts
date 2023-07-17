@@ -445,3 +445,60 @@ export const REPORT_ID_EDU_STAGE_MAPPING: Record<
   "1": "Junior",
   "2": "Elementary",
 };
+
+export const SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR = [
+  {
+    key: 7,
+    weight: 0.2,
+    label: "七年级教学综合成绩",
+  },
+  {
+    key: 8,
+    weight: 0.2,
+    label: "八年级教学综合成绩",
+  },
+  {
+    key: 9,
+    weight: 0.6,
+    label: "六年级教学综合成绩",
+  },
+  {
+    key: "predict",
+    weight: 1,
+    label: "预测目标完成成绩",
+  },
+  {
+    key: "increment",
+    weight: 1,
+    label: "学校九年级教学质量增量",
+  },
+];
+
+
+export const SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY = [
+  {
+    key: 7,
+    weight: 0.2,
+    label: "七年级教学综合成绩",
+  },
+  {
+    key: 8,
+    weight: 0.2,
+    label: "八年级教学综合成绩",
+  },
+  {
+    key: 9,
+    weight: 0.6,
+    label: "六年级教学综合成绩",
+  },
+  {
+    key: "predict",
+    weight: 1,
+    label: "预测目标完成成绩",
+  },
+  {
+    key: "increment",
+    weight: 1,
+    label: "学校九年级教学质量增量",
+  },
+];
