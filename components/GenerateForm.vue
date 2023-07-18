@@ -152,7 +152,9 @@ const gradeName = GRADE_MAPPING[gradeKey];
               </div> -->
           </div>
           <div class="mt-5 flex flex-col-reverse text-right md:block md:space-x-3">
-            <Button :disabled="loading" :loading="loading" type="submit">生成报表</Button>
+            <BaseButton color="primary" type="submit" shadow="flat" :loading="$props.loading" :disabled="$props.loading">
+              生成报表
+            </BaseButton>
             <!-- <button
                 type="button"
                 class="is-button rounded is-button-default w-full sm:w-32"
