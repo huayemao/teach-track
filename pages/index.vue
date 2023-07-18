@@ -92,7 +92,7 @@ const data: Report[] = DEFAULT_REPORTS;
               <div class="flex w-full flex-col sm:flex-row sm:items-center">
                 <div class="relative mb-4 flex grow items-center gap-2 px-6 sm:mb-0 sm:px-2 h-10">
                   <span v-if="i == 0"
-                    class="text-muted-400 absolute hidden font-sans text-xs font-medium uppercase sm:-top-10 sm:start-2 sm:block">名称</span>
+                    class="text-muted-400 absolute hidden font-sans text-xs font-medium uppercase sm:-top-10 sm:start-2 sm:block">报表名称</span>
                   <div
                     class="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 rounded-full bg-primary-500/20 text-primary-500">
                     <span>元</span>

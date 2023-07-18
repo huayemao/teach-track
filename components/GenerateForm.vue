@@ -79,7 +79,7 @@ const gradeName = GRADE_MAPPING[gradeKey];
             <div class="col-span-12">
               <div class="relative gap-1 text-muted-400">
                 <div class="text-muted-500 dark:text-muted-400 mb-2 select-none font-sans text-sm">
-                  权重配置
+                  教师成绩权重配置
                 </div>
 
                 <div class="absolute top-0 right-0 inline-flex items-center gap-1 text-muted-400">
