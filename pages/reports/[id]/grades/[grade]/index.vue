@@ -46,8 +46,6 @@ const generate = async ({ fileList }) => {
   }
 };
 
-useToggleClass(edit, 'bg-muted-100', (v, prevV) => v && !prevV)
-
 const handleCancel = () => {
   if (teachers.value) {
     edit.value = false
@@ -82,10 +80,7 @@ watch(
 
 </script>
 <template>
-  <div v-if="pending" class="w-full h-full flex justify-center items-center">
-    <BasePlaceload class=" w-full rounded h-8" />
-  </div>
-
+  <PlaceLoad v-if="pending" />
   <template v-else>
     <div :class="{
       'h-0 hidden': !edit,

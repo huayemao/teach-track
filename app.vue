@@ -832,7 +832,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <main class="min-h-[60vh]">
+        <main style="min-height: calc( 100vh - 6rem )">
           <NuxtPage />
         </main>
       </div>

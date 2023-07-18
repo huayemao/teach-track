@@ -30,8 +30,6 @@ watch(
   }
 );
 
-useToggleClass(edit, 'bg-muted-100', (v, prevV) => v && !prevV)
-
 const output = () => {
 
 }

@@ -17,7 +17,7 @@ const edit = ref(true);
 const isGenerating = ref(false);
 const activeTab = ref("teacher");
 
-const { data: tableData, mutate } = useStorageState<object[]>(
+const { data: tableData, mutate, pending } = useStorageState<object[]>(
   [eduStage, "predict"].join("-")
 );
 
@@ -117,7 +117,8 @@ const Tabs: FunctionalComponent<
 };
 </script>
 <template>
-  <main>
+  <PlaceLoad v-if="pending" />
+  <template v-else>
     <div :class="{
       'h-0 hidden': !edit,
       'transition-all duration-300': true,
@@ -187,5 +188,5 @@ const Tabs: FunctionalComponent<
     <div class="w-full mt-24">
       <ResultTable v-if="!edit" :data="tableData" />
     </div>
-  </main>
+  </template>
 </template>
