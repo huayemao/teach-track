@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { Report, SCHOOLS } from "@/constants/index";
+import { Report } from "@/constants/index";
 import { getFullReportTitle } from "@/utils/biz/report";
 
 // todo: 有些 config 好像是放在 report 上。
 type Payload = {
     fileList: FileList | null;
-    byRegion: boolean;
 };
 const emit = defineEmits<{
     (e: "confirm", payload: Payload): void;
@@ -16,13 +15,11 @@ const props = defineProps<{
     loading?: boolean;
 }>();
 
-const byRegion = ref(false);
 const xslx = ref<FileList | null>(null);
 
 const handleSubmit = () => {
     emit("confirm", {
         fileList: xslx.value,
-        byRegion: byRegion.value,
     });
 };
 
@@ -47,7 +44,7 @@ const route = useRoute();
                             <div class="grid grid-cols-12 gap-4">
                                 <div class="col-span-12">
                                     <div class="relative">
-                                        <FileInput v-model="xslx" id="xlsx" label="导入九年级预测目标完成成绩" />
+                                        <BaseInputFile v-model="xslx" id="xlsx" label="导入九年级预测目标完成成绩" />
                                     </div>
                                 </div>
                             </div>
@@ -60,20 +57,7 @@ const route = useRoute();
                 <div class="mx-auto w-full max-w-[410px]">
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12"></div>
-                        <div class="col-span-12" v-if="!!byRegion">
-                            <div class="relative w-full">
-                                <div class="text-muted-500 dark:text-muted-400 mb-2 select-none font-sans text-sm">
-                                    学校-区域划分
-                                </div>
 
-                                <el-table :data="SCHOOLS" height="200px" striped class="border w-full">
-                                    <el-table-column header-align="center" align="center" prop="区域类别" label="区域"
-                                        label-class-name="text-center" />
-                                    <el-table-column header-align="center" align="center" prop="学校名称" label="学校"
-                                        label-class-name="text-center" />
-                                </el-table>
-                            </div>
-                        </div>
                     </div>
                     <div class="mt-5 flex flex-col-reverse text-right md:block md:space-x-3">
                         <BaseButton color="primary" type="submit" shadow="flat" :disabled="$props.loading">

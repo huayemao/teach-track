@@ -1,17 +1,16 @@
 <script setup lang="tsx">
 import { useStorageState } from "@/composables/storage";
 import {
-DEFAULT_SUBMISSIONS,
-REPORT_ID_EDU_STAGE_MAPPING,
+DEFAULT_SUBMISSIONS
 } from "@/constants/index";
+import { getFullReportTitle } from '@/utils/biz/report';
 import { runPredict } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
-import type { FunctionalComponent } from "vue";
 import { ref, watch } from "vue";
 
 const route = useRoute();
-const reportId = route.params.id.toString();
-const { attributes: { eduStage } } = useReport();
+const report = useReport();
+const { attributes: { eduStage } } = report
 
 const edit = ref(true);
 const isGenerating = ref(false);
@@ -42,20 +41,9 @@ watch(
   }
 );
 
-watch(
-  () => edit.value,
-  (v) => {
-    if (!!v) {
-      document
-        .querySelector("#__nuxt")
-        ?.firstElementChild?.classList.remove("bg-muted-100");
-    }
-  }
-);
 
 async function getSchools() {
-  const stage = REPORT_ID_EDU_STAGE_MAPPING[reportId];
-  const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === stage).map(
+  const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === eduStage).map(
     (e) => e.grade
   );
   const resultsByGrade = await getGradeResults(grades.slice(-1));
@@ -65,56 +53,14 @@ async function getSchools() {
 
 onMounted(async () => {
   const schools = await getSchools();
-
   if (!schools) {
     ElNotification.warning("请先录入九年级中考成绩");
   }
-
-  // todo: 平均分要加一列按加分之后算的。。。
 });
 
-/* todo: 画出结构示例 */
-const tabs = [
-  { title: "教师", key: "teacher" },
-  { title: "学校", key: "school" },
-];
 
-const handleTabChange = (v: string) => {
-  activeTab.value = v;
-};
 
-const Tabs: FunctionalComponent<
-  {
-    activeKey: string;
-    data: { title: string; key: string }[];
-  },
-  {
-    change(key: string): void;
-  }
-> = ({ activeKey, data }, context) => {
-  // merge
-  const activeClasses =
-    "!border-primary-500 !text-muted-800 !dark:text-muted-100";
-  return (
-    <>
-      {data.map(({ title, key }) => (
-        <button
-          onClick={() => {
-            context.emit("change", key);
-          }}
-          type="button"
-          class={
-            "inline-flex items-center justify-center border-b-2 px-4 py-3 font-sans text-sm border-transparent text-muted-400 " +
-            (activeKey === key ? activeClasses : "")
-          }
-          key={key}
-        >
-          <span>{title}</span>
-        </button>
-      ))}
-    </>
-  );
-};
+
 </script>
 <template>
   <PlaceLoad v-if="pending" />
@@ -125,67 +71,8 @@ const Tabs: FunctionalComponent<
     }">
       <PredictForm @confirm="generate" :loading="isGenerating" />
     </div>
-    <div v-show="!edit"
-      class="ltablet:h-[256px] dark:bg-muted-800 absolute start-0 top-0 h-[420px] w-full bg-white lg:h-[256px]"></div>
-    <div v-show="!edit" class="ltablet:h-36 ltablet:flex-row relative flex h-[290px] w-full flex-col lg:h-36 lg:flex-row">
-      <div class="ltablet:flex-row relative z-10 flex w-full flex-col gap-6 lg:flex-row">
-        <div class="ltablet:text-left text-center lg:text-left">
-          <h2
-            class="font-heading text-xl font-semibold leading-normal ltablet:justify-start flex items-center justify-center gap-2 lg:justify-start">
-            <span class="text-muted-800 dark:text-white">元谋县</span>
-          </h2>
-          <!-- <span class="text-muted-400 mb-4 block font-sans text-base">
-            七年级
-          </span> -->
-          <!-- <div class="mb-6 flex items-center gap-x-6">
-            <div
-              class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
-            >
-              <span class="text-muted-800 dark:text-muted-100 font-semibold">
-                1288 </span
-              ><span
-                class="text-muted-400 ltablet:text-base text-xs sm:text-sm lg:text-base"
-              >
-                学生
-              </span>
-            </div>
-            <div
-              class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
-            >
-              <span class="text-muted-800 dark:text-muted-100 font-semibold">
-                138 </span
-              ><span
-                class="text-muted-400 ltablet:text-base text-xs sm:text-sm lg:text-base"
-              >
-                教师
-              </span>
-            </div>
-            <div
-              class="ltablet:flex-row ltablet:flex-auto flex flex-1 flex-col gap-x-2 font-sans lg:flex-auto lg:flex-row"
-            >
-              <span class="text-muted-800 dark:text-muted-100 font-semibold">
-                329 </span
-              ><span
-                class="text-muted-400 ltablet:text-base text-xs sm:text-sm lg:text-base"
-              >
-                学校
-              </span>
-            </div>
-          </div> -->
-        </div>
-      </div>
-      <div
-        class="ltablet:justify-start ltablet:ms-auto ltablet:mt-0 mt-4 flex shrink-0 justify-center lg:ms-auto lg:mt-0 lg:justify-start">
-        <button @click="() => (edit = true)" type="button"
-          class="is-button rounded is-button-default ltablet:w-auto ltablet:mx-0 mx-auto w-52 lg:mx-0 lg:w-auto">
-          <span>编辑</span>
-        </button>
-      </div>
-      <div class="ltablet:bottom-[-30px] absolute bottom-[-48px] start-0 flex items-end gap-2 lg:bottom-[-30px]">
-        <Tabs :activeKey="activeTab" :data="tabs" @change="handleTabChange"></Tabs>
-      </div>
-    </div>
-    <div class="w-full mt-24">
+    <DataHeader subTitle="预测目标完成清空" canOutput @outputBtnClicked="() => { }" :title="getFullReportTitle(report)" />
+    <div class=" w-full">
       <ResultTable v-if="!edit" :data="tableData" />
     </div>
   </template>

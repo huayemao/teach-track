@@ -67,7 +67,7 @@ const route = useRoute();
                 <div class="grid grid-cols-12 gap-4">
                   <div class="col-span-12">
                     <div class="relative">
-                      <FileInput v-model="xslx" id="xlsx" label="导入九年级预测目标完成成绩" />
+                      <BaseInputFile v-model="xslx" id="xlsx" label="导入九年级预测目标完成成绩" />
                     </div>
                   </div>
                 </div>
