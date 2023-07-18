@@ -2,12 +2,11 @@
 import { useStorageState } from "@/composables/storage";
 import { DEFAULT_SUBMISSIONS } from "@/constants/index";
 import { getFullReportTitle } from "@/utils/biz/report";
-import { SchoolIncrement, SchoolInfo, runIncrement } from "@/utils/process";
+import { SchoolIncrement, SchoolInfo } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
 import localforage from "localforage";
 import { ref, watch } from "vue";
 
-const route = useRoute();
 const report = useReport();
 const { attributes: { eduStage, schoolResultConfig } } = report;
 const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === eduStage).map(
@@ -21,17 +20,6 @@ const edit = ref(true);
 const isGenerating = ref(false);
 const activeTab = ref("default");
 
-const generate = async ({ fileList }) => {
-  const file = fileList[0];
-  if (!file) {
-    return;
-  }
-
-  const res = await runIncrement(file, 9, await getSchools());
-  tableData.value = res;
-  mutate(res);
-  edit.value = false;
-};
 
 watch(
   () => tableData.value,
@@ -49,7 +37,7 @@ const output = () => {
 }
 
 const computeRes = async () => {
-
+  isGenerating.value = true
   const resultsByGrade = (await getGradeResults(grades)) as Record<
     number,
     { schools: SchoolInfo[] }
@@ -108,6 +96,7 @@ const computeRes = async () => {
   }
   ElNotification.success("生成成功")
   edit.value = false
+  isGenerating.value = false
 }
 
 
@@ -122,7 +111,7 @@ onMounted(computeRes);
     'transition duration-300': true,
   }">
     <div>
-      <SchoolGradeForm :report="report" @confirm="computeRes"></SchoolGradeForm>
+      <SchoolGradeForm :loading="isGenerating" :report="report" @confirm="computeRes"></SchoolGradeForm>
     </div>
   </div>
   <div v-show="!edit">
