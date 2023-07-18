@@ -476,29 +476,24 @@ export const SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR = [
 
 export const SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY = [
   {
-    key: 7,
-    weight: 0.2,
-    label: "七年级教学综合成绩",
+    key: 3,
+    weight: 0.15,
+    label: "三年级教学综合成绩",
   },
   {
-    key: 8,
-    weight: 0.2,
-    label: "八年级教学综合成绩",
+    key: 4,
+    weight: 0.15,
+    label: "四年级教学综合成绩",
   },
   {
-    key: 9,
-    weight: 0.6,
-    label: "六年级教学综合成绩",
+    key: 5,
+    weight: 0.15,
+    label: "五年级教学综合成绩",
   },
   {
     key: "predict",
     weight: 1,
     label: "预测目标完成成绩",
-  },
-  {
-    key: "increment",
-    weight: 1,
-    label: "学校九年级教学质量增量",
   },
 ];
 
@@ -512,6 +507,7 @@ export type Report = {
     eduStage: "Elementary" | "Junior";
     year: number;
     region: string;
+    schoolResultConfig: typeof SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR;
   };
 };
 
@@ -526,6 +522,7 @@ export const DEFAULT_REPORTS = [
       createdAt: "111",
       publishedAt: "111",
       updatedAt: "111",
+      schoolResultConfig: SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR,
     },
   },
   {
@@ -538,6 +535,7 @@ export const DEFAULT_REPORTS = [
       createdAt: "111",
       publishedAt: "111",
       updatedAt: "111",
+      schoolResultConfig: SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY,
     },
   },
 ];

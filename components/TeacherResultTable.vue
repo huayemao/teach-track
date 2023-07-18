@@ -29,7 +29,14 @@ const { teachers } = defineProps<{
 
 <style scoped>
 :deep(.el-table__header-wrapper) {
-  @apply sticky top-0 bg-white z-10;
+  @apply sticky top-0 z-10 bg-muted-50 shadow-sm;
 }
 
+:deep(.el-table thead) {
+  --el-table-header-text-color: var(--color-muted-600);
+}
+
+:deep(.el-table th.el-table__cell) {
+  @apply !bg-muted-50 !text-muted-600;
+}
 </style>

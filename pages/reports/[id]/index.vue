@@ -139,12 +139,14 @@ onMounted(async () => {
             </p>
             <ul>
               <li>程序运行在本地，数据不会上传，切换设备或清空浏览器数据后，数据将丢失，请慎重保管</li>
+              <li>
+                暂不支持编辑参数
+              </li>
               <li>现有 Excel 中“校区”有时指学校名称，有时指校区名称，混淆使用会导致解析错误，务必修正列名，学校名称统一使用“学校”，校区名称统一使用“校区”</li>
               <li>
                 <NuxtLink class="dark:text-muted-50" to="/sample">导入的 Excel 数据样例</NuxtLink>
               </li>
             </ul>
-            <!-- ... -->
           </article>
         </div>
         <!-- <div class="mb-4 mt-auto flex items-center gap-2">
