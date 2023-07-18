@@ -91,8 +91,9 @@ watch(
       'h-0 hidden': !edit,
       'transition duration-300': true,
     }">
-      <GenerateForm :title="getFullReportTitle(report)" @confirm="generate" @cancel="handleCancel" :loading="isGenerating"
-        :grade="grade" />
+      <FormLayout title="导入年级数据" description="导入年级学生成绩、教师、学校等数据" @cancel="handleCancel">
+        <GenerateForm :title="getFullReportTitle(report)" @confirm="generate" :loading="isGenerating" :grade="grade" />
+      </FormLayout>
     </div>
     <!-- 这是为了让顶端变白 -->
     <div v-show="!edit">

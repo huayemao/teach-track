@@ -2,9 +2,7 @@
 import { useStorageState } from "@/composables/storage";
 import {
 DEFAULT_SUBMISSIONS,
-GRADE_MAPPING,
-SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY,
-SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR
+GRADE_MAPPING
 } from "@/constants/index";
 import { SchoolInfo, TeacherInfo } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
@@ -14,10 +12,7 @@ import compact from 'lodash/compact';
 
 
 const route = useRoute();
-const { attributes: { eduStage } } = useReport()
-
-const schoolResultConfig = eduStage === 'Junior' ? SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR :
-  SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY
+const { attributes: { eduStage, schoolResultConfig } } = useReport()
 
 const dialogOpened = ref(false)
 const { data: predictData } = useStorageState([eduStage, "predict"].join("-"));

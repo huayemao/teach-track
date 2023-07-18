@@ -13,7 +13,9 @@ const { attributes: { eduStage, schoolResultConfig } } = report;
 const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === eduStage).map(
   (e) => e.grade
 );
-const { data: tableData, mutate } = useStorageState<object[] | null>("school", null);
+
+// todo: key 的设置有问题
+const { data: tableData, mutate } = useStorageState<object[] | null>([eduStage, "school"].join('-'), null);
 
 const edit = ref(true);
 const isGenerating = ref(false);
@@ -46,8 +48,7 @@ const output = () => {
 
 }
 
-
-onMounted(async () => {
+const computeRes = async () => {
 
   const resultsByGrade = (await getGradeResults(grades)) as Record<
     number,
@@ -55,7 +56,7 @@ onMounted(async () => {
   >;
   const predictData = (await localforage.getItem(
     [eduStage, "predict"].join("-")
-  )) as { 学校: string; 目标完成总得分: string }[];
+  )) as { 学校: string; 目标完成总得分: number }[];
   const incrementData = (await localforage.getItem(
     [eduStage, "increment"].join("-")
   )) as SchoolIncrement[];
@@ -94,18 +95,23 @@ onMounted(async () => {
       base += baseScore * config.weight;
     }
 
-    const increment = incrementData.find(
+    const increment = incrementData?.find(
       (e) => e.学校 == school.学校
     )?.教学质量增量;
 
     item['各年级综合成绩'] = base;
     item['九年级学年末中考目标完成总得分'] = school.目标完成总得分;
     item['教学质量增量'] = increment
-    item['综合成绩'] = base + school.目标完成总得分 + increment
+    item['综合成绩'] = base + school.目标完成总得分 + (increment || 0)
     data.push(item);
     mutate(data);
   }
-});
+  ElNotification.success("生成成功")
+  edit.value = false
+}
+
+
+onMounted(computeRes);
 
 
 
@@ -115,11 +121,13 @@ onMounted(async () => {
     'h-0 hidden': !edit,
     'transition duration-300': true,
   }">
-    <div>form</div>
+    <div>
+      <SchoolGradeForm :report="report" @confirm="computeRes"></SchoolGradeForm>
+    </div>
   </div>
   <div v-show="!edit">
     <DataHeader :title="getFullReportTitle(report)" subTitle="学校教学质量成绩" canOutput @outputBtnClicked="output"
-      @editBtnClicked="() => { }"></DataHeader>
+      @editBtnClicked="() => { edit = true }"></DataHeader>
     <div class="w-full relative -top-[5.2rem] z-10">
       <BaseTabs @update:selected="s => s && (activeTab = s)" :selected="activeTab" :tabs="[
         { label: '学校教学质量成绩', value: 'default' },

@@ -14,7 +14,6 @@ type Payload = {
 };
 const emit = defineEmits<{
   (e: "confirm", payload: Payload): void;
-  (e: "cancel"): void;
 }>();
 
 const props = defineProps<{
@@ -44,99 +43,78 @@ const gradeKey = Number(route.params.grade);
 const gradeName = GRADE_MAPPING[gradeKey];
 </script>
 <template>
-  <div class="">
-    <div class="mb-4 flex flex-col justify-between md:flex-row md:items-center">
-      <div
-        class="ltablet:max-w-full flex max-w-[425px] flex-col items-center gap-4 text-center md:flex-row md:text-left lg:max-w-full">
-        <div>
-          <h2 class="font-heading text-xl font-light leading-tight text-muted-800 dark:text-white">
-            <span>导入年级数据</span>
-          </h2>
-          <p class="font-alt text-sm font-normal leading-normal">
-            <span class="text-muted-500">
-              导入年级学生成绩、教师、学校等数据</span>
-          </p>
-        </div>
-      </div>
-      <div class="mt-4 flex items-center justify-center gap-2 md:mt-0 md:justify-start">
-        <BaseButton @click="() => $emit('cancel')" condensed>
-          <Icon name="lucide:arrow-left" class="h-4 w-4" />
-          <span>取消</span>
-        </BaseButton>
-      </div>
-    </div>
-    <div
-      class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md">
-      <form @submit.prevent="handleSubmit" action=""
-        class="divide-muted-200 dark:divide-muted-700 grid divide-x sm:grid-cols-2">
-        <div shape="curved" class="bg-muted-50 dark:bg-muted-800/60 space-y-8 p-10">
-          <div class="mx-auto flex w-full max-w-[410px] flex-col">
+  <div
+    class="border-muted-200 dark:border-muted-700 dark:bg-muted-800 relative w-full border bg-white transition-all duration-300 rounded-md">
+    <form @submit.prevent="handleSubmit" action=""
+      class="divide-muted-200 dark:divide-muted-700 grid divide-x sm:grid-cols-2">
+      <div shape="curved" class="bg-muted-50 dark:bg-muted-800/60 space-y-8 p-10">
+        <div class="mx-auto flex w-full max-w-[410px] flex-col">
+          <div>
             <div>
-              <div>
-                <div class="relative mb-5 flex flex-col items-center justify-center gap-4">
-                  <div class="text-xl font-semibold text-muted-600">
-                    {{ gradeName }}
-                  </div>
+              <div class="relative mb-5 flex flex-col items-center justify-center gap-4">
+                <div class="text-xl font-semibold text-muted-600">
+                  {{ gradeName }}
                 </div>
-                <div class="grid grid-cols-12 gap-4">
-                  <div class="col-span-12">
-                    <div class="relative">
-                      <BaseInputFile v-model="xslx" :text-value='(fileList: FileList | null) => {
-                        if (!fileList?.item?.length) {
-                          return "未选择文件";
-                        } return fileList?.item.length === 1 ? fileList.item(0)?.name
-                          ?? "Invalid file selected" : `${fileList?.item?.length ?? 0} files selected`;
-                      }' id="xlsx" :label="`上传${gradeName}成绩数据`" placeholder="选择文件" accept=".xlsx, .xls" />
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-6 mt-4"></div>
               </div>
+              <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12">
+                  <div class="relative">
+                    <BaseInputFile v-model="xslx" :text-value='(fileList: FileList | null) => {
+                      if (!fileList?.item?.length) {
+                        return "未选择文件";
+                      } return fileList?.item.length === 1 ? fileList.item(0)?.name
+                        ?? "Invalid file selected" : `${fileList?.item?.length ?? 0} files selected`;
+                    }' id="xlsx" :label="`上传${gradeName}成绩数据`" placeholder="选择文件" accept=".xlsx, .xls" />
+                  </div>
+                </div>
+              </div>
+              <div class="mb-6 mt-4"></div>
             </div>
           </div>
         </div>
-        <div shape="curved" class="w-full space-y-8 p-10">
-          <div class="mx-auto w-full max-w-[410px]">
-            <div class="grid grid-cols-12 gap-4">
-              <div class="col-span-12">
-                <div class="relative gap-1 text-muted-400">
-                  <div class="text-muted-500 dark:text-muted-400 mb-2 select-none font-sans text-sm">
-                    权重配置
-                  </div>
-
-                  <div class="absolute top-0 right-0 inline-flex items-center gap-1 text-muted-400">
-                    <BaseCheckbox label="按区域配置权重" v-model="byRegion" id="byRegion" />
-                  </div>
-                  <el-table v-if="!byRegion" :data="DEFAULT_TEACHER_METRIC_CONFIG" striped class="border">
-                    <el-table-column v-for="item in Object.keys(DEFAULT_TEACHER_METRIC_CONFIG[0])" header-align="center"
-                      align="center" :key="item" :prop='item' :label="FIELD_LABEL_MAPPING['METRIC_CONFIG'][item]"
-                      label-class-name="text-center" />
-                  </el-table>
-                  <el-table v-if="!!byRegion" :data="DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION" striped class="border">
-                    <el-table-column v-for="item in Object.keys(DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION[0])"
-                      :label="FIELD_LABEL_MAPPING['METRIC_CONFIG'][item]" header-align="center" align="center" :key="item"
-                      :prop='item' label-class-name="text-center" />
-                  </el-table>
+      </div>
+      <div shape="curved" class="w-full space-y-8 p-10">
+        <div class="mx-auto w-full max-w-[410px]">
+          <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-12">
+              <div class="relative gap-1 text-muted-400">
+                <div class="text-muted-500 dark:text-muted-400 mb-2 select-none font-sans text-sm">
+                  权重配置
                 </div>
-              </div>
-              <div class="col-span-12" v-if="!!byRegion">
-                <div class="relative w-full">
-                  <div class="text-muted-500 dark:text-muted-400 mb-2 select-none font-sans text-sm">
-                    学校-区域划分
-                  </div>
 
-                  <el-table :data="SCHOOLS" height="200px" striped class="border w-full">
-                    <el-table-column header-align="center" align="center" prop="区域类别" label="区域"
-                      label-class-name="text-center" />
-                    <el-table-column header-align="center" align="center" prop="学校名称" label="学校"
-                      label-class-name="text-center" />
-                  </el-table>
+                <div class="absolute top-0 right-0 inline-flex items-center gap-1 text-muted-400">
+                  <BaseCheckbox label="按区域配置权重" v-model="byRegion" id="byRegion" />
                 </div>
+                <el-table v-if="!byRegion" :data="DEFAULT_TEACHER_METRIC_CONFIG" striped class="border">
+                  <el-table-column v-for="item in Object.keys(DEFAULT_TEACHER_METRIC_CONFIG[0])" header-align="center"
+                    align="center" :key="item" :prop='item' :label="FIELD_LABEL_MAPPING['METRIC_CONFIG'][item]"
+                    label-class-name="text-center" />
+                </el-table>
+                <el-table v-if="!!byRegion" :data="DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION" striped class="border">
+                  <el-table-column v-for="item in Object.keys(DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION[0])"
+                    :label="FIELD_LABEL_MAPPING['METRIC_CONFIG'][item]" header-align="center" align="center" :key="item"
+                    :prop='item' label-class-name="text-center" />
+                </el-table>
               </div>
-              <div class="col-span-6">
-                <BaseCheckbox label="考核学校巩固率" v-model="enableConsolidationRate" id="enableConsolidationRate" />
+            </div>
+            <div class="col-span-12" v-if="!!byRegion">
+              <div class="relative w-full">
+                <div class="text-muted-500 dark:text-muted-400 mb-2 select-none font-sans text-sm">
+                  学校-区域划分
+                </div>
+
+                <el-table :data="SCHOOLS" height="200px" striped class="border w-full">
+                  <el-table-column header-align="center" align="center" prop="区域类别" label="区域"
+                    label-class-name="text-center" />
+                  <el-table-column header-align="center" align="center" prop="学校名称" label="学校"
+                    label-class-name="text-center" />
+                </el-table>
               </div>
-              <!-- <div class="ltablet:col-span-4 col-span-12 lg:col-span-4">
+            </div>
+            <div class="col-span-6">
+              <BaseCheckbox label="考核学校巩固率" v-model="enableConsolidationRate" id="enableConsolidationRate" />
+            </div>
+            <!-- <div class="ltablet:col-span-4 col-span-12 lg:col-span-4">
                 <div class="relative">
                   <label
                     class="nui-label w-full pb-1 text-[0.825rem]"
@@ -172,19 +150,18 @@ const gradeName = GRADE_MAPPING[gradeKey];
                   </div>
                 </div>
               </div> -->
-            </div>
-            <div class="mt-5 flex flex-col-reverse text-right md:block md:space-x-3">
-              <Button :disabled="loading" :loading="loading" type="submit">生成报表</Button>
-              <!-- <button
+          </div>
+          <div class="mt-5 flex flex-col-reverse text-right md:block md:space-x-3">
+            <Button :disabled="loading" :loading="loading" type="submit">生成报表</Button>
+            <!-- <button
                 type="button"
                 class="is-button rounded is-button-default w-full sm:w-32"
               >
                 查看结果
               </button> -->
-            </div>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 </template>

@@ -491,6 +491,11 @@ export const SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY = [
     label: "五年级教学综合成绩",
   },
   {
+    key: 6,
+    weight: 0.55,
+    label: "六年级教学综合成绩",
+  },
+  {
     key: "predict",
     weight: 1,
     label: "预测目标完成成绩",
