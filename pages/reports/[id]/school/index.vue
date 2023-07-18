@@ -100,7 +100,7 @@ const computeRes = async () => {
     )?.教学质量增量;
 
     item['各年级综合成绩'] = base;
-    item['九年级学年末中考目标完成总得分'] = school.目标完成总得分;
+    item['目标完成总得分'] = school.目标完成总得分;
     item['教学质量增量'] = increment
     item['综合成绩'] = base + school.目标完成总得分 + (increment || 0)
     data.push(item);
