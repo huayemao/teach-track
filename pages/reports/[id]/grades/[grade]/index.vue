@@ -64,9 +64,8 @@ const output = () => {
     const schoolSheet = XLSX.utils.json_to_sheet(schools.value)
     XLSX.utils.book_append_sheet(workbook, teacherSheet, '教师成绩');
     XLSX.utils.book_append_sheet(workbook, schoolSheet, '年级学校成绩');
-    XLSX.writeFile(workbook, 'output.xlsx');
+    XLSX.writeFile(workbook, [getFullReportTitle(report), gradeName].join('-'));
   }
-
 }
 
 watch(

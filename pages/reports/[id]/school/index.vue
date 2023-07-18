@@ -6,6 +6,7 @@ import { SchoolIncrement, SchoolInfo } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
 import localforage from "localforage";
 import { ref, watch } from "vue";
+import XLSX from 'xlsx';
 
 const report = useReport();
 const { attributes: { eduStage, schoolResultConfig } } = report;
@@ -31,7 +32,12 @@ watch(
 );
 
 const output = () => {
-
+  const workbook = XLSX.utils.book_new();
+  if (tableData.value) {
+    const sheet = XLSX.utils.json_to_sheet(tableData.value);
+    XLSX.utils.book_append_sheet(workbook, sheet, '学校教学质量成绩');
+    XLSX.writeFile(workbook, [getFullReportTitle(report), '学校教学质量成绩'].join('-') + '.xlsx');
+  }
 }
 
 const computeRes = async () => {
