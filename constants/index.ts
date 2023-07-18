@@ -1,3 +1,8 @@
+export const EDU_STAGE_MAPPING = {
+  Junior: "初中",
+  Elementary: "小学",
+};
+
 export const FIELD_LABEL_MAPPING = {
   METRIC_CONFIG: {
     regionName: "区域名称",

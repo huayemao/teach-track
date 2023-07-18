@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { DEFAULT_REPORTS, Report } from '@/constants/index';
+import { DEFAULT_REPORTS, EDU_STAGE_MAPPING, Report } from '@/constants/index';
 import { getFullReportTitle } from '@/utils/biz/report';
-
 
 type Response = {
   data: Report[];
@@ -120,7 +119,8 @@ const data: Report[] = DEFAULT_REPORTS;
                     class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-40">
                     <span v-if="i == 0"
                       class="text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0">教育阶段</span><span
-                      class="text-muted-500 dark:text-muted-400 font-sans text-sm">{{ item.attributes.eduStage }}</span>
+                      class="text-muted-500 dark:text-muted-400 font-sans text-sm">{{
+                        EDU_STAGE_MAPPING[item.attributes.eduStage] }}</span>
                   </div>
                   <div
                     class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-16">
