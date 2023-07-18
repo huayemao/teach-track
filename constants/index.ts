@@ -509,7 +509,7 @@ export type Report = {
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
-    eduStage: "小学" | "初中";
+    eduStage: "Elementary" | "Junior";
     year: number;
     region: string;
   };
@@ -519,7 +519,7 @@ export const DEFAULT_REPORTS = [
   {
     id: 1,
     attributes: {
-      eduStage: "初中",
+      eduStage: "Junior",
       title: "教学质量分析",
       year: 2021,
       region: "元谋县",
@@ -531,7 +531,7 @@ export const DEFAULT_REPORTS = [
   {
     id: 2,
     attributes: {
-      eduStage: "小学",
+      eduStage: "Elementary",
       title: "教学质量分析",
       year: 2021,
       region: "元谋县",

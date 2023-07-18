@@ -183,12 +183,12 @@ onMounted(async () => {
           </a> -->
         </div>
         <div class="mb-2 space-y-5">
-          <NuxtLink class="flex items-center gap-3" :to="{
-            name: $route.name?.toString() + '-grades-grade',
-            params: { grade: submission.grade },
-          }" v-for="submission in DEFAULT_SUBMISSIONS.filter(
-  (e) => e.eduStage === eduStage
-)" :key="submission.grade">
+          <NuxtLink class="flex items-center gap-3" v-for="submission in DEFAULT_SUBMISSIONS.filter(
+            (e) => e.eduStage === eduStage
+          )" :to="{
+  name: $route.name?.toString() + '-grades-grade',
+  params: { grade: submission.grade },
+}" :key="submission.grade">
             <Item :status="allGradeData?.[submission.grade]?.teachers ? 'finished' : 'none'
               " :description="allGradeData?.[submission.grade]?.teachers
     ? '已录入'

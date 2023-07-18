@@ -748,7 +748,7 @@ onMounted(() => {
       </div>
     </div>
     <div
-      class="bg-muted-100 dark:bg-muted-900 relative min-h-screen w-full overflow-x-hidden px-4 transition-all duration-300 xl:px-10 xl:max-w-[calc(100%_-_80px)] xl:ms-[80px]">
+      class="bg-muted-100 dark:bg-muted-900  min-h-screen w-full px-4 transition-all duration-300 xl:px-10 xl:max-w-[calc(100%_-_80px)] xl:ms-[80px]">
       <div class="mx-auto w-full max-w-7xl">
         <!--[-->
         <div class="relative z-50 mb-5 flex h-16 items-center gap-2">
