@@ -114,7 +114,7 @@ onMounted(computeRes);
   </div>
   <div v-show="!edit">
     <DataHeader :title="getFullReportTitle(report)" subTitle="学校教学质量成绩" canOutput @outputBtnClicked="output"
-      @editBtnClicked="() => { edit = true }"></DataHeader>
+      @editBtnClicked="() => { edit = true }" />
     <div class="w-full relative -top-[5.2rem] z-10">
       <BaseTabs @update:selected="s => s && (activeTab = s)" :selected="activeTab" :tabs="[
         { label: '学校教学质量成绩', value: 'default' },
