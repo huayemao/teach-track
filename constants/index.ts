@@ -528,7 +528,7 @@ export const DEFAULT_REPORTS: Report[] = [
     attributes: {
       eduStage: "Junior",
       title: "教学质量分析",
-      year: 2021,
+      year: 2022,
       region: "元谋县",
       createdAt: "111",
       publishedAt: "111",
@@ -539,6 +539,34 @@ export const DEFAULT_REPORTS: Report[] = [
   },
   {
     id: 2,
+    attributes: {
+      eduStage: "Elementary",
+      title: "教学质量分析",
+      year: 2022,
+      region: "元谋县",
+      createdAt: "111",
+      publishedAt: "111",
+      updatedAt: "111",
+      schoolResultConfig: SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY,
+      grades: [1, 2, 3, 4, 5, 6],
+    },
+  },
+  {
+    id: 3,
+    attributes: {
+      eduStage: "Junior",
+      title: "教学质量分析",
+      year: 2021,
+      region: "元谋县",
+      createdAt: "111",
+      publishedAt: "111",
+      updatedAt: "111",
+      schoolResultConfig: SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR,
+      grades: [7, 8, 9],
+    },
+  },
+  {
+    id: 4,
     attributes: {
       eduStage: "Elementary",
       title: "教学质量分析",

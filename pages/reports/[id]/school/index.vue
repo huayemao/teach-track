@@ -9,13 +9,13 @@ import { ref, watch } from "vue";
 import XLSX from 'xlsx';
 
 const report = useReport();
-const { attributes: { eduStage, schoolResultConfig } } = report;
+const { attributes: { eduStage, schoolResultConfig }, id } = report;
 const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === eduStage).map(
   (e) => e.grade
 );
 
 // todo: key 的设置有问题
-const { data: tableData, mutate } = useStorageState<object[] | null>([eduStage, "school"].join('-'), null);
+const { data: tableData, mutate } = useStorageState<object[] | null>([id, eduStage, "school"].join('-'), null);
 
 const edit = ref(true);
 const isGenerating = ref(false);
@@ -42,7 +42,7 @@ const output = () => {
 
 const computeRes = async () => {
   isGenerating.value = true
-  const resultsByGrade = (await getGradeResults(grades)) as Record<
+  const resultsByGrade = (await getGradeResults(id, grades)) as Record<
     number,
     { schools: SchoolInfo[] }
   >;

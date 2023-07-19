@@ -10,11 +10,11 @@ import { ref, watch } from "vue";
 
 const route = useRoute();
 const report = useReport();
-const { attributes: { eduStage } }
+const { attributes: { eduStage }, id }
   = report
 
 const { data: tableData, mutate, pending } = useStorageState(
-  [eduStage, "increment"].join("-"),
+  [id, eduStage, "increment"].join("-"),
   null
 );
 
@@ -47,7 +47,7 @@ async function getSchools() {
   const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === eduStage).map(
     (e) => e.grade
   );
-  const resultsByGrade = await getGradeResults(grades.slice(-1));
+  const resultsByGrade = await getGradeResults(id, grades.slice(-1));
   const schools = Object.values(resultsByGrade)?.[0]?.schools;
   return schools;
 }

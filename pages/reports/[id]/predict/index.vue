@@ -10,14 +10,14 @@ import { ref, watch } from "vue";
 
 const route = useRoute();
 const report = useReport();
-const { attributes: { eduStage } } = report
+const { attributes: { eduStage }, id } = report
 
 const edit = ref(true);
 const isGenerating = ref(false);
 const activeTab = ref("teacher");
 
 const { data: tableData, mutate, pending } = useStorageState<object[]>(
-  [eduStage, "predict"].join("-")
+  [id, eduStage, "predict"].join("-")
 );
 
 const generate = async ({ fileList }) => {
@@ -46,7 +46,7 @@ async function getSchools() {
   const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === eduStage).map(
     (e) => e.grade
   );
-  const resultsByGrade = await getGradeResults(grades.slice(-1));
+  const resultsByGrade = await getGradeResults(id, grades.slice(-1));
   const schools = Object.values(resultsByGrade)?.[0]?.schools;
   return schools;
 }

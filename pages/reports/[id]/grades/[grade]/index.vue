@@ -17,8 +17,8 @@ const grade = Number(route.params.grade);
 const gradeName = GRADE_MAPPING[grade];
 
 
-const { data: teachers, mutate: setTeachers, pending } = useStorageState<TeacherInfo[]>([grade, 'teachers'].join("-"));
-const { data: schools, mutate: setSchools } = useStorageState<SchoolInfo[]>([grade, 'schools'].join("-"));
+const { data: teachers, mutate: setTeachers, pending } = useStorageState<TeacherInfo[]>([report.id, grade, 'teachers'].join("-"));
+const { data: schools, mutate: setSchools } = useStorageState<SchoolInfo[]>([report.id, grade, 'schools'].join("-"));
 
 const generate = async ({ fileList }) => {
   isGenerating.value = true;

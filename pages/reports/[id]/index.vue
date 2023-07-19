@@ -12,11 +12,11 @@ import compact from 'lodash/compact';
 
 
 const route = useRoute();
-const { attributes: { eduStage, schoolResultConfig } } = useReport()
+const { attributes: { eduStage, schoolResultConfig }, id } = useReport()
 
 const dialogOpened = ref(false)
-const { data: predictData } = useStorageState([eduStage, "predict"].join("-"));
-const { data: incrementData } = useStorageState([eduStage, "increment"].join("-"));
+const { data: predictData } = useStorageState([id, eduStage, "predict"].join("-"));
+const { data: incrementData } = useStorageState([id, eduStage, "increment"].join("-"));
 
 const allGradeData = ref<
   Record<
@@ -113,7 +113,7 @@ onMounted(async () => {
     (e) => e.grade
   );
 
-  const resultsByGrade = await getGradeResults(grades);
+  const resultsByGrade = await getGradeResults(id, grades);
   allGradeData.value = resultsByGrade;
 });
 // todo: 图片用 initial
