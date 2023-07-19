@@ -21,9 +21,6 @@ const route = useRoute()
 useHead({
   title: route.meta.title || '',
   titleTemplate: (name) => name ? (name + ' - 楚雄州教育质量分析平台') : '楚雄州教育质量分析平台',
-  meta: [
-    { property: 'og:title', content: `teach-track - ${route.meta.title}` }
-  ]
 })
 
 onMounted(() => {

@@ -4,6 +4,7 @@ import {
 DEFAULT_SUBMISSIONS,
 GRADE_MAPPING
 } from "@/constants/index";
+import { getFullReportTitle } from "@/utils/biz/report";
 import { SchoolInfo, TeacherInfo } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
 import compact from 'lodash/compact';
@@ -13,8 +14,16 @@ definePageMeta({
 })
 
 
+
+
 const route = useRoute();
-const { attributes: { eduStage, schoolResultConfig }, id } = useReport()
+const report = useReport()
+const { attributes: { eduStage, schoolResultConfig }, id } = report
+
+useHead({
+  title: getFullReportTitle(report),
+})
+
 
 const dialogOpened = ref(false)
 const { data: predictData } = useStorageState([id, eduStage, "predict"].join("-"));
