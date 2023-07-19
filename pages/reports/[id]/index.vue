@@ -119,6 +119,11 @@ const items4school = computed(() => {
   ]);
 });
 
+
+const canViewSchoolResult = computed(() => {
+  return items4school.value.every((e => e.status === 'finished'))
+})
+
 onMounted(async () => {
   const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === eduStage).map(
     (e) => e.grade
@@ -225,7 +230,8 @@ onMounted(async () => {
           </NuxtLink>
         </div>
         <div class="mt-4 w-full flex justify-end">
-          <BaseButton color="primary" shadow="flat" :to="{ name: $route.name?.toString() + '-school' }">查看结果</BaseButton>
+          <BaseButton v-show="canViewSchoolResult" color="primary" shadow="flat"
+            :to="{ name: $route.name?.toString() + '-school' }">查看结果</BaseButton>
         </div>
       </div>
     </div>
