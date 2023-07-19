@@ -749,6 +749,22 @@ export const getExcellentTeachers = (
           );
           return otherTeachers.every((ot) => ot.综合成绩 < t.综合成绩);
         });
+      } else if (region === "山区") {
+        const candidates = list.filter((t) => {
+          const otherTeachers = teachers.filter(
+            (e) => getRegionNameByTeacher(e) === "坝区" && e.年级 === subject
+          );
+          return otherTeachers.every((ot) => ot.综合成绩 < t.综合成绩);
+        });
+
+        const normalCandidates = list
+          .sort((a, b) => b.综合成绩 - a.综合成绩)
+          .slice(0, Math.floor(list.length * config.rate));
+
+        itemsBySubject[subject] =
+          candidates.length > normalCandidates.length
+            ? candidates
+            : normalCandidates;
       } else {
         itemsBySubject[subject] = list
           .sort((a, b) => b.综合成绩 - a.综合成绩)
