@@ -48,8 +48,6 @@ const computeRes = async () => {
   isGenerating.value = true
 
   try {
-
-
     const resultsByGrade = (await getGradeResults(id, grades)) as Record<
       number,
       { schools: SchoolInfo[] }
@@ -70,7 +68,8 @@ const computeRes = async () => {
         throw Error("配置错误");
       }
 
-      const item: Record<string, number | undefined> = {}
+      const item: Record<string, number | undefined | string> = {}
+      item['学校'] = school.学校
 
       for (const grade of grades) {
 
