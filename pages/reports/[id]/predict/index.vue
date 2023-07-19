@@ -76,9 +76,11 @@ onMounted(async () => {
     }">
       <PredictForm @confirm="generate" :loading="isGenerating" />
     </div>
-    <DataHeader subTitle="预测目标完成清空" canOutput @outputBtnClicked="() => { }" :title="getFullReportTitle(report)" />
-    <div class=" w-full">
-      <ResultTable v-if="!edit" :data="tableData" />
+    <div v-show="!edit">
+      <DataHeader subTitle="预测目标完成清情况" canOutput @outputBtnClicked="() => { }" :title="getFullReportTitle(report)" />
+      <div class=" w-full">
+        <ResultTable v-if="!edit" :data="tableData" />
+      </div>
     </div>
   </template>
 </template>

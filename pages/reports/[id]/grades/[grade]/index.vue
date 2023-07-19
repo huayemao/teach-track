@@ -13,6 +13,9 @@ const route = useRoute();
 const report = useReport()
 // todo: 渲染性能问题
 
+onMounted(() => {
+  route.meta.title = getFullReportTitle(report) + '——' + '教学质量分年级数据'
+})
 
 const edit = ref(true);
 const isGenerating = ref(false);
