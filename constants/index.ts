@@ -518,10 +518,11 @@ export type Report = {
     year: number;
     region: string;
     schoolResultConfig: typeof SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR;
+    grades: number[];
   };
 };
 
-export const DEFAULT_REPORTS = [
+export const DEFAULT_REPORTS: Report[] = [
   {
     id: 1,
     attributes: {
@@ -533,6 +534,7 @@ export const DEFAULT_REPORTS = [
       publishedAt: "111",
       updatedAt: "111",
       schoolResultConfig: SCHOOL_TEACHING_QUALITY_CONFIG_JUNIOR,
+      grades: [7, 8, 9],
     },
   },
   {
@@ -546,6 +548,7 @@ export const DEFAULT_REPORTS = [
       publishedAt: "111",
       updatedAt: "111",
       schoolResultConfig: SCHOOL_TEACHING_QUALITY_CONFIG_ELEMENTARY,
+      grades: [1, 2, 3, 4, 5, 6],
     },
   },
 ];

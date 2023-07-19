@@ -95,7 +95,7 @@ const data: Report[] = DEFAULT_REPORTS;
                     class="text-muted-400 absolute hidden font-sans text-xs font-medium uppercase sm:-top-10 sm:start-2 sm:block">报表名称</span>
                   <div
                     class="relative inline-flex shrink-0 items-center justify-center outline-none h-12 w-12 rounded-full bg-primary-500/20 text-primary-500">
-                    <span>元</span>
+                    <span>{{ item.attributes.region.slice(0, 1) }}</span>
 
                     <!---->
                   </div>
@@ -113,7 +113,7 @@ const data: Report[] = DEFAULT_REPORTS;
                     class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-40">
                     <span v-if="i == 0"
                       class="text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0">区域</span><span
-                      class="text-muted-500 dark:text-muted-400 font-sans text-sm">元谋县</span>
+                      class="text-muted-500 dark:text-muted-400 font-sans text-sm">{{ item.attributes.region }}</span>
                   </div>
                   <div
                     class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-40">
@@ -123,55 +123,13 @@ const data: Report[] = DEFAULT_REPORTS;
                         EDU_STAGE_MAPPING[item.attributes.eduStage] }}</span>
                   </div>
                   <div
-                    class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-16">
+                    class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-40">
                     <span v-if="i == 0"
                       class="text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0">状态</span><span
                       class="whitespace-nowrap inline-block px-3 font-sans transition-shadow duration-300 py-1 text-[0.65rem] rounded-full bg-info-100 text-info-500 border-info-100 dark:border-info-500 dark:text-info-500 border dark:bg-transparent capitalize">未发布</span>
                   </div>
-                  <div
-                    class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 ptablet:hidden w-full sm:w-[160px]">
-                    <span v-if="i == 0"
-                      class="text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0">年级</span>
-                    <div class="flex">
-                      <div
-                        class="dark:bg-muted-800 relative flex shrink-0 items-center justify-center rounded-full bg-white transition-all duration-100 ease-in h-8 w-8 hover:-ms-2 hover:me-2 focus:-ms-2 focus:me-2">
-                        <div
-                          class="relative inline-flex shrink-0 items-center justify-center outline-none h-8 w-8 rounded-full bg-primary-500/20 text-primary-500 !scale-90"
-                          id="0" tabindex="0">
-                          <div
-                            class="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300 rounded-full">
-                            <!-- <img
-                              src="/img/avatars/25.svg"
-                              class="max-h-full max-w-full object-cover shadow-sm dark:border-transparent h-8 w-8"
-                            /> -->
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="dark:bg-muted-800 relative flex shrink-0 items-center justify-center rounded-full bg-white transition-all duration-100 ease-in h-8 w-8 hover:-ms-2 hover:me-2 focus:-ms-2 focus:me-2 -ms-2 hover:-ms-4 hover:me-2 focus:-ms-4 focus:me-2">
-                        <div
-                          class="relative inline-flex shrink-0 items-center justify-center outline-none h-8 w-8 rounded-full bg-primary-500/20 text-primary-500 !scale-90"
-                          id="2" tabindex="0">
-                          <div
-                            class="flex h-full w-full items-center justify-center overflow-hidden text-center transition-all duration-300 rounded-full">
-                            <!-- <img
-                              src="/img/avatars/16.svg"
-                              class="max-h-full max-w-full object-cover shadow-sm dark:border-transparent h-8 w-8"
-                            /> -->
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="dark:bg-muted-800 shrink-0 rounded-full bg-white transition-all duration-100 ease-in -ms-2 h-8 w-8">
-                        <div
-                          class="bg-muted-200 dark:border-muted-800 dark:bg-muted-700 relative inline-flex h-full w-full scale-90 items-center justify-center rounded-full border-white">
-                          <span class="text-muted-500 dark:text-muted-300 -ms-1 font-sans font-normal uppercase text-sm">
-                            +3</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2">
+         
+                  <div class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-40">
                     <span v-if="i == 0"
                       class="text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0">操作</span>
                     <NuxtLink :to="`reports/${item.id}`"
