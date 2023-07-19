@@ -27,6 +27,11 @@ const gradeName = GRADE_MAPPING[grade];
 const { data: teachers, mutate: setTeachers, pending } = useStorageState<TeacherInfo[]>([report.id, grade, 'teachers'].join("-"));
 const { data: schools, mutate: setSchools } = useStorageState<SchoolInfo[]>([report.id, grade, 'schools'].join("-"));
 
+const excllentTeachers = computed(() => {
+  const rate = grade === 9 ? 0.25 : 0.20
+  return teachers.value?.length ? getExcellentTeachers(teachers.value, { rate }) : null
+})
+
 const generate = async ({ fileList }) => {
   isGenerating.value = true;
   const file = fileList[0];
@@ -104,9 +109,12 @@ watch(
         <BaseTabs @update:selected="s => s && (activeTab = s)" :selected="activeTab" :tabs="[
           { label: '教师', value: 'teachers' },
           { label: '学校', value: 'schools' },
+          { label: '优质教师奖', value: 'excllentTeachers' },
         ]">
           <template #tab="{ activeValue }">
             <TeacherResultTable :teachers="(teachers as TeacherInfo[])" v-show="activeValue === 'teachers'" />
+            <ExcellentTeachersTable :teachers="(excllentTeachers as TeacherInfo[])"
+              v-show="activeValue === 'excllentTeachers'" />
             <SchoolResultTable v-show="activeValue === 'schools'" :schools="(schools as SchoolInfo[])" />
           </template>
         </BaseTabs>

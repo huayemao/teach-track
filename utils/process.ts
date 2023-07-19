@@ -52,8 +52,8 @@ export type TeacherInfo = {
   合格率: string;
   优生数: string;
   优生率: string;
-  教科研加分: string;
-  综合成绩: string;
+  教科研加分: number;
+  综合成绩: number;
   classes?: string[];
 };
 
@@ -97,20 +97,25 @@ const parseClasses = (str: string) => {
   return flatMap(arr, getValue);
 };
 
+const getRegionNameByTeacher = (teacher: TeacherInfo) => {
+  const schoolName = teacher["学校"];
+  const region = SCHOOLS.find((s) => s.学校名称 === schoolName)?.区域类别;
+  return region;
+};
+
 const getMetricWeightConfigByTeacher = (
   teacher: TeacherInfo,
   config: typeof DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION
 ) => {
-  const schoolName = teacher["学校"];
-
   type ByRegionConfig = typeof DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION;
 
   if (!("regionName" in config["0"])) {
     throw Error("参数错误：指标权重配置错误");
   }
-  const region = SCHOOLS.find((s) => s.学校名称 === schoolName)?.区域类别;
+  const region = getRegionNameByTeacher(teacher);
+
   if (!region) {
-    throw Error("学学校域配置解析出错");
+    throw Error("学校区域对应关系配置解析出错");
   }
 
   return (config as ByRegionConfig).find(
@@ -635,11 +640,6 @@ function runTeachers(
       return t.classes.includes(key);
     });
     if (!targetTeachers.length) {
-      console.log(
-        teachers.filter((e) =>
-          e.classes.some((s) => s.includes("老城阿郎完小"))
-        )
-      );
       // todo: 这里要核实
       ElNotification.warning("在教师表中未找到学生班级: " + key);
       // throw Error("在教师表中未找到学生班级: " + key);
@@ -697,7 +697,8 @@ function runTeachers(
     const { 平均分, 合格率, 优生率, 教科研加分 } = teacher;
 
     // todo: 这个应该在数据处理之前做
-    teacher.教科研加分 = isNaN(教科研加分) || !教科研加分 ? 0 : 教科研加分;
+    teacher.教科研加分 =
+      isNaN(Number(教科研加分)) || !教科研加分 ? 0 : 教科研加分;
 
     const grade =
       Number(平均分) * config.averageScore +
@@ -715,5 +716,54 @@ function runTeachers(
       updateTeacher(teacher, "综合成绩", grade);
     }
   }
+
   return teachers;
 }
+
+export const getExcellentTeachers = (
+  teachers: TeacherInfo[],
+  config: { rate: number }
+) => {
+  const teachersGroupedByRegion = groupBy(teachers, (t) =>
+    getRegionNameByTeacher(t)
+  );
+
+  for (const region in teachersGroupedByRegion) {
+    const items = teachersGroupedByRegion[region];
+    // todo: 还要按学科分组
+
+    const itemsBySubject = groupBy(items, "年级");
+
+    for (const subject in itemsBySubject) {
+      const list = itemsBySubject[subject];
+
+      // 元谋一中、元马中学教师教学综合成绩超过坝区同学科教学综合成绩第 1 名且不超过本校任课教师数 50%均可获教学成
+      if (region === "城区") {
+        const candidates = list
+          .sort((a, b) => b.综合成绩 - a.综合成绩)
+          .slice(0, Math.floor(list.length * 0.5));
+
+        itemsBySubject[subject] = candidates.filter((t) => {
+          const otherTeachers = teachers.filter(
+            (e) => getRegionNameByTeacher(e) === "坝区" && e.年级 === subject
+          );
+          return otherTeachers.every((ot) => ot.综合成绩 < t.综合成绩);
+        });
+      } else {
+        itemsBySubject[subject] = list
+          .sort((a, b) => b.综合成绩 - a.综合成绩)
+          .slice(0, Math.floor(list.length * config.rate));
+      }
+    }
+
+    teachersGroupedByRegion[region] = flatMap(itemsBySubject, (e) => e);
+  }
+
+  const result = flatMap(teachersGroupedByRegion, (v, k) => {
+    return map(v, (e) => ({
+      ...e,
+      区域: k,
+    }));
+  });
+  return result;
+};
