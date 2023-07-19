@@ -24,6 +24,9 @@ useHead({
   title: getFullReportTitle(report),
 })
 
+onMounted(() => {
+  route.meta.title += ('——' + getFullReportTitle(report))
+})
 
 const dialogOpened = ref(false)
 const { data: predictData } = useStorageState([id, eduStage, "predict"].join("-"));
