@@ -559,7 +559,7 @@ function runSchools(
     // todo: 这个是特殊逻辑，只对九年级有意义，目的是为了算 z 分？但是会对别的年级的数据展示造成影响。。。
     // 要想办法去掉
 
-    if (students.some((s) => !!s["年级总分（含加分）"])) {
+    if (students.some((s) => !!s["总分（含加分）"])) {
       school["年级总分（含加分）"] = students
         .map((e) => Number(e["总分（含加分）"]))
         .reduce((arr, score) => arr + score, 0);
