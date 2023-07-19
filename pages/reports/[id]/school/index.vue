@@ -8,6 +8,10 @@ import localforage from "localforage";
 import { ref, watch } from "vue";
 import XLSX from 'xlsx';
 
+definePageMeta({
+  title: '学校教学质量成绩'
+})
+
 const report = useReport();
 const { attributes: { eduStage, schoolResultConfig }, id } = report;
 const grades = DEFAULT_SUBMISSIONS.filter((e) => e.eduStage === eduStage).map(

@@ -8,6 +8,10 @@ import { runIncrement } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
 import { ref, watch } from "vue";
 
+definePageMeta({
+  title: '教学质量增量'
+})
+
 const route = useRoute();
 const report = useReport();
 const { attributes: { eduStage }, id }

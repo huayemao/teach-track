@@ -8,7 +8,9 @@ import { SchoolInfo, TeacherInfo } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
 import compact from 'lodash/compact';
 
-
+definePageMeta({
+  title: '报表详情'
+})
 
 
 const route = useRoute();

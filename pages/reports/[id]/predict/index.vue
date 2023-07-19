@@ -8,6 +8,11 @@ import { runPredict } from "@/utils/process";
 import { getGradeResults } from "@/utils/store";
 import { ref, watch } from "vue";
 
+definePageMeta({
+  title: '预测目标完成情况'
+})
+
+
 const route = useRoute();
 const report = useReport();
 const { attributes: { eduStage }, id } = report

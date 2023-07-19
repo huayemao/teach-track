@@ -5,6 +5,10 @@ import { SchoolInfo, TeacherInfo, run } from "@/utils/process";
 import { ref, watch } from "vue";
 import XLSX from 'xlsx';
 
+definePageMeta({
+  title: '教学质量分年级数据'
+})
+
 const route = useRoute();
 const report = useReport()
 // todo: 渲染性能问题

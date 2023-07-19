@@ -16,6 +16,16 @@ interface Token {
   user: User;
 }
 
+const route = useRoute()
+
+useHead({
+  title: route.meta.title || '',
+  titleTemplate: (name) => name ? (name + ' - 楚雄州教育质量分析平台') : '楚雄州教育质量分析平台',
+  meta: [
+    { property: 'og:title', content: `teach-track - ${route.meta.title}` }
+  ]
+})
+
 onMounted(() => {
   localforage.config({
     driver: localforage.INDEXEDDB,
@@ -752,27 +762,7 @@ onMounted(() => {
       <div class="mx-auto w-full max-w-7xl">
         <!--[-->
         <div class="relative z-50 mb-5 flex h-16 items-center gap-2">
-          <!-- <button
-          type="button"
-          class="flex h-10 w-10 items-center justify-center -ms-3"
-        >
-          <div class="scale-90 relative h-5 w-5">
-            <span
-              class="-rotate-45 rtl:rotate-45 max-w-[75%] top-1 bg-primary-500 absolute block h-0.5 w-full transition-all duration-300"
-            ></span
-            ><span
-              class="opacity-0 translate-x-4 bg-primary-500 absolute top-1/2 block h-0.5 w-full max-w-[50%] transition-all duration-300"
-            ></span
-            ><span
-              class="rotate-45 rtl:-rotate-45 max-w-[75%] bottom-1 bg-primary-500 absolute block h-0.5 w-full transition-all duration-300"
-            ></span>
-          </div>
-        </button> -->
-          <!-- <h1
-          class="font-heading text-2xl font-light leading-normal leading-normal text-muted-800 hidden dark:text-white md:block"
-        >
-          Interviews
-        </h1> -->
+          <H1 />
           <div class="ms-auto"></div>
           <div class="flex items-center gap-2 h-16">
             <BaseThemeToggle />

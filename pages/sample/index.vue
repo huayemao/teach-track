@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+    title: '输入样例'
+})
 const files = [
     "元谋县2021-2022学年末考试（八年级） .xlsx",
     "元谋县2021-2022学年末考试（二年级） .xlsx",
