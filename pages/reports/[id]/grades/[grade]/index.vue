@@ -28,8 +28,8 @@ const { data: teachers, mutate: setTeachers, pending } = useStorageState<Teacher
 const { data: schools, mutate: setSchools } = useStorageState<SchoolInfo[]>([report.id, grade, 'schools'].join("-"));
 
 const excllentTeachers = computed(() => {
-  const rate = grade === 9 ? 0.25 : 0.20
-  return teachers.value?.length ? getExcellentTeachers(teachers.value, { rate }) : null
+  const method = grade < 7 ? getElementaryExcellentT : getJuniorExcellentT
+  return teachers.value?.length ? getExcellentTeachers(teachers.value, method) : null
 })
 
 const generate = async ({ fileList }) => {

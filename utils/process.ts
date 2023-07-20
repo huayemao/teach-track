@@ -3,8 +3,10 @@ import {
   DEFAULT_SCHOOL_METRIC_CONFIG_BY_REGION,
   DEFAULT_TEACHER_METRIC_CONFIG,
   DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION,
+  ELEMENTARY_SCHOOLS,
   FILED_MAPPING_BY_GRADE,
-  SCHOOLS,
+  GRADE_MAPPING,
+  JUNIOR_SCHOOLS,
   SCORE_THRESHOLD_BY_GRADE,
 } from "@/constants/index";
 import flatMap from "lodash/flatMap";
@@ -99,7 +101,16 @@ const parseClasses = (str: string) => {
 
 const getRegionNameByTeacher = (teacher: TeacherInfo) => {
   const schoolName = teacher["学校"];
-  const region = SCHOOLS.find((s) => s.学校名称 === schoolName)?.区域类别;
+  const gradeName2number = Object.fromEntries(
+    Object.entries(GRADE_MAPPING).map((e) => e.reverse())
+  );
+
+  const schools =
+    gradeName2number[teacher.年级.slice(0, 3)] < 7
+      ? ELEMENTARY_SCHOOLS
+      : JUNIOR_SCHOOLS;
+
+  const region = schools.find((s) => s.学校名称 === schoolName)?.区域类别;
   return region;
 };
 
@@ -128,7 +139,9 @@ const getMetricWeightConfigBySchool = (
   config: typeof DEFAULT_SCHOOL_METRIC_CONFIG_BY_REGION
 ) => {
   type ByRegionConfig = (typeof DEFAULT_SCHOOL_METRIC_CONFIG_BY_REGION)[0];
-  const region = SCHOOLS.find((s) => s.学校名称 === schoolName)?.区域类别;
+  const region = JUNIOR_SCHOOLS.find(
+    (s) => s.学校名称 === schoolName
+  )?.区域类别;
   if (!region) {
     throw Error("学学校域配置表解析出错");
   }
@@ -504,13 +517,13 @@ function runSchools(
     getMetricWeightConfig,
     enableConsolidationRate = false,
   } = options;
-  const schoolCount = SCHOOLS.length;
+  const schoolCount = JUNIOR_SCHOOLS.length;
   const studentsBySchool = groupBy(students, "学校");
   // if (schoolCount != Object.keys(studentsBySchool).length) {
   //   alert("学校数量与系统中配置的不一致，已配置的学校：\n");
   // }
 
-  const schoolNames = SCHOOLS.map((e) => e.学校名称);
+  const schoolNames = JUNIOR_SCHOOLS.map((e) => e.学校名称);
   const schoolNamesFromExamResult = Object.keys(studentsBySchool);
 
   // if (
@@ -720,9 +733,108 @@ function runTeachers(
   return teachers;
 }
 
+interface getRegionSubjectExcellentTeachers {
+  (
+    region: string,
+    subject: string,
+    list: TeacherInfo[],
+    allTeachers: TeacherInfo[]
+  ): TeacherInfo[];
+}
+
+export const getJuniorExcellentT: getRegionSubjectExcellentTeachers = (
+  region,
+  subject,
+  list,
+  allTeachers
+) => {
+  const rate = list[0].年级.includes("九") ? 0.25 : 0.2;
+
+  // 元谋一中、元马中学教师教学综合成绩超过坝区同学科教学综合成绩第 1 名且不超过本校任课教师数 50%均可获教学成
+  if (region === "城区") {
+    const candidates = list
+      .sort((a, b) => b.综合成绩 - a.综合成绩)
+      .slice(0, Math.floor(list.length * 0.5));
+
+    return candidates.filter((t) => {
+      const otherTeachers = allTeachers.filter(
+        (e) => getRegionNameByTeacher(e) === "坝区" && e.年级 === subject
+      );
+      return otherTeachers.every((ot) => ot.综合成绩 < t.综合成绩);
+    });
+  } else if (region === "山区") {
+    const candidates = list.filter((t) => {
+      const otherTeachers = allTeachers.filter(
+        (e) => getRegionNameByTeacher(e) === "坝区" && e.年级 === subject
+      );
+      return otherTeachers.every((ot) => ot.综合成绩 < t.综合成绩);
+    });
+
+    const normalCandidates = list
+      .sort((a, b) => b.综合成绩 - a.综合成绩)
+      .slice(0, Math.floor(list.length * rate));
+
+    return candidates.length > normalCandidates.length
+      ? candidates
+      : normalCandidates;
+  } else {
+    return list
+      .sort((a, b) => b.综合成绩 - a.综合成绩)
+      .slice(0, Math.floor(list.length * rate));
+  }
+};
+
+export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
+  region,
+  subject,
+  list,
+  allTeachers
+) => {
+  const rate = list[0].年级.includes("六") ? 0.25 : 0.2;
+
+  const config = {
+    山区: (studentCount: number) => {
+      if (studentCount < 20) {
+        return "20人以下";
+      } else {
+        return "20人及以上";
+      }
+    },
+    坝区: (studentCount: number) => {
+      if (studentCount < 20) {
+        return "20人以下";
+      } else if (studentCount >= 20 && studentCount < 40) {
+        return "20-40人";
+      } else {
+        return "40人及以上";
+      }
+    },
+  };
+
+  const teachersByStudentCount = groupBy(list, (t) => {
+    if (!(region in config)) {
+      throw Error("教师区域解析错误");
+    }
+    const fn = config[region as keyof typeof config];
+    return fn(Number(t.应考数));
+  });
+
+  const result = flatMap(teachersByStudentCount, (list, countInfo) => {
+    return list
+      .sort((a, b) => b.综合成绩 - a.综合成绩)
+      .slice(0, Math.floor(list.length * rate))
+      .map((e) => ({
+        ...e,
+        人数类别: countInfo,
+      }));
+  });
+  console.log(region, subject, teachersByStudentCount, result);
+  return result;
+};
+
 export const getExcellentTeachers = (
   teachers: TeacherInfo[],
-  config: { rate: number }
+  cb: getRegionSubjectExcellentTeachers
 ) => {
   const teachersGroupedByRegion = groupBy(teachers, (t) =>
     getRegionNameByTeacher(t)
@@ -730,46 +842,14 @@ export const getExcellentTeachers = (
 
   for (const region in teachersGroupedByRegion) {
     const items = teachersGroupedByRegion[region];
-    // todo: 还要按学科分组
-
     const itemsBySubject = groupBy(items, "年级");
 
     for (const subject in itemsBySubject) {
       const list = itemsBySubject[subject];
 
-      // 元谋一中、元马中学教师教学综合成绩超过坝区同学科教学综合成绩第 1 名且不超过本校任课教师数 50%均可获教学成
-      if (region === "城区") {
-        const candidates = list
-          .sort((a, b) => b.综合成绩 - a.综合成绩)
-          .slice(0, Math.floor(list.length * 0.5));
-
-        itemsBySubject[subject] = candidates.filter((t) => {
-          const otherTeachers = teachers.filter(
-            (e) => getRegionNameByTeacher(e) === "坝区" && e.年级 === subject
-          );
-          return otherTeachers.every((ot) => ot.综合成绩 < t.综合成绩);
-        });
-      } else if (region === "山区") {
-        const candidates = list.filter((t) => {
-          const otherTeachers = teachers.filter(
-            (e) => getRegionNameByTeacher(e) === "坝区" && e.年级 === subject
-          );
-          return otherTeachers.every((ot) => ot.综合成绩 < t.综合成绩);
-        });
-
-        const normalCandidates = list
-          .sort((a, b) => b.综合成绩 - a.综合成绩)
-          .slice(0, Math.floor(list.length * config.rate));
-
-        itemsBySubject[subject] =
-          candidates.length > normalCandidates.length
-            ? candidates
-            : normalCandidates;
-      } else {
-        itemsBySubject[subject] = list
-          .sort((a, b) => b.综合成绩 - a.综合成绩)
-          .slice(0, Math.floor(list.length * config.rate));
-      }
+      // 计算每区每学科的优质教师
+      const res = cb(region, subject, list, teachers);
+      itemsBySubject[subject] = res;
     }
 
     teachersGroupedByRegion[region] = flatMap(itemsBySubject, (e) => e);

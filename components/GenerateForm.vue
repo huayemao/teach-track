@@ -4,7 +4,7 @@ DEFAULT_TEACHER_METRIC_CONFIG,
 DEFAULT_TEACHER_METRIC_CONFIG_BY_REGION,
 FIELD_LABEL_MAPPING,
 GRADE_MAPPING,
-SCHOOLS,
+JUNIOR_SCHOOLS,
 } from "@/constants/index";
 
 // todo: 还应包括配置参数。
@@ -103,7 +103,7 @@ const gradeName = GRADE_MAPPING[gradeKey];
                   学校-区域划分
                 </div>
 
-                <el-table :data="SCHOOLS" height="200px" striped class="border w-full">
+                <el-table :data="JUNIOR_SCHOOLS" height="200px" striped class="border w-full">
                   <el-table-column header-align="center" align="center" prop="区域类别" label="区域"
                     label-class-name="text-center" />
                   <el-table-column header-align="center" align="center" prop="学校名称" label="学校"

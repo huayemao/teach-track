@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SCHOOLS } from "@/constants/index";
+import { JUNIOR_SCHOOLS } from "@/constants/index";
 
 // todo: 还应包括配置参数。
 type Payload = {
@@ -86,7 +86,7 @@ const route = useRoute();
                     学校-区域划分
                   </div>
 
-                  <el-table :data="SCHOOLS" height="200px" striped class="border w-full">
+                  <el-table :data="JUNIOR_SCHOOLS" height="200px" striped class="border w-full">
                     <el-table-column header-align="center" align="center" prop="区域类别" label="区域"
                       label-class-name="text-center" />
                     <el-table-column header-align="center" align="center" prop="学校名称" label="学校"
