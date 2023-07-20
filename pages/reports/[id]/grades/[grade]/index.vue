@@ -26,6 +26,7 @@ const gradeName = GRADE_MAPPING[grade];
 
 const { data: teachers, mutate: setTeachers, pending } = useStorageState<TeacherInfo[]>([report.id, grade, 'teachers'].join("-"));
 const { data: schools, mutate: setSchools } = useStorageState<SchoolInfo[]>([report.id, grade, 'schools'].join("-"));
+const { data: students, mutate: setStudents } = useStorageState<SchoolInfo[]>([report.id, grade, 'students'].join("-"));
 
 const excllentTeachers = computed(() => {
   const method = grade < 7 ? getElementaryExcellentT : getJuniorExcellentT
@@ -39,13 +40,14 @@ const generate = async ({ fileList }) => {
     return;
   }
   try {
-    const { teachers: teachersData, schools: schoolsData } = await run(
+    const { teachers: teachersData, schools: schoolsData, students: studentsData } = await run(
       file,
       grade
     );
 
     setTeachers(teachersData);
     setSchools(schoolsData);
+    setStudents(studentsData);
     console.log("生成完成")
     ElNotification.success("生成完成")
     isGenerating.value = false;
@@ -109,15 +111,17 @@ watch(
         @editBtnClicked="() => { edit = true }" />
       <div class="w-full relative -top-[5.2rem] z-10">
         <BaseTabs @update:selected="s => s && (activeTab = s)" :selected="activeTab" :tabs="[
+          { label: `学生${students?.length && '（' + students?.length + '）' || ''}`, value: 'students' },
           { label: `教师${teachers?.length && '（' + teachers?.length + '）' || ''}`, value: 'teachers' },
           { label: `学校${schools?.length && '（' + schools?.length + '）' || ''}`, value: 'schools' },
           { label: `优质教师奖${excllentTeachers?.length && '（' + excllentTeachers?.length + '）' || ''}`, value: 'excllentTeachers' },
         ]">
           <template #tab="{ activeValue }">
-            <TeacherResultTable :teachers="(teachers as TeacherInfo[])" v-show="activeValue === 'teachers'" />
+            <TeacherResultTable :teachers="(teachers as TeacherInfo[])" v-if="activeValue === 'teachers'" />
             <ExcellentTeachersTable :teachers="(excllentTeachers as TeacherInfo[])"
-              v-show="activeValue === 'excllentTeachers'" />
-            <SchoolResultTable v-show="activeValue === 'schools'" :schools="(schools as SchoolInfo[])" />
+              v-if="activeValue === 'excllentTeachers'" />
+            <ResultTable :data="(students as object[])" v-if="activeValue === 'students'" :filterableCols="['学校', '班级']" />
+            <SchoolResultTable v-if="activeValue === 'schools'" :schools="(schools as SchoolInfo[])" />
           </template>
         </BaseTabs>
       </div>

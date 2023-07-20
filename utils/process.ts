@@ -422,7 +422,11 @@ function calculateStandardDeviation(data: number[], mean: number): number {
 export async function run(
   file: File,
   grade: number
-): Promise<{ teachers: TeacherInfo[]; schools: SchoolInfo[] }> {
+): Promise<{
+  teachers: TeacherInfo[];
+  schools: SchoolInfo[];
+  students: ExamResult[];
+}> {
   let workbook: XLSX.WorkBook;
   try {
     workbook = await preprocess(file, ["学生成绩", "教师", "学校"]);
@@ -483,9 +487,16 @@ export async function run(
       }
     );
 
+    const students = rank(
+      studentsFromExcel,
+      FILED_MAPPING_BY_GRADE[grade].totalScore,
+      "名次"
+    );
+
     return {
       schools,
       teachers,
+      students,
     };
   } catch (error) {
     throw "运算错误：" + error;
@@ -864,7 +875,6 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
           );
         })
         .sort((a, b) => b.综合成绩 - a.综合成绩)[0];
-      // console.log(teacher, topOther);
 
       return teacher.综合成绩 > topOther.综合成绩;
     })
