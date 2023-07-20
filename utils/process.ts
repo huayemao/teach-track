@@ -756,12 +756,17 @@ export const getJuniorExcellentT: getRegionSubjectExcellentTeachers = (
       .sort((a, b) => b.综合成绩 - a.综合成绩)
       .slice(0, Math.floor(list.length * 0.5));
 
-    return candidates.filter((t) => {
-      const otherTeachers = allTeachers.filter(
-        (e) => getRegionNameByTeacher(e) === "坝区" && e.年级 === subject
-      );
-      return otherTeachers.every((ot) => ot.综合成绩 < t.综合成绩);
-    });
+    return candidates
+      .filter((t) => {
+        const otherTeachers = allTeachers.filter(
+          (e) => getRegionNameByTeacher(e) === "坝区" && e.年级 === subject
+        );
+        return otherTeachers.every((ot) => ot.综合成绩 < t.综合成绩);
+      })
+      .map((e, i) => ({
+        ...e,
+        组内排名: i + 1,
+      }));
   } else if (region === "山区") {
     const candidates = list.filter((t) => {
       const otherTeachers = allTeachers.filter(
@@ -771,16 +776,26 @@ export const getJuniorExcellentT: getRegionSubjectExcellentTeachers = (
     });
 
     const normalCandidates = list
-      .sort((a, b) => b.综合成绩 - a.综合成绩)
-      .slice(0, Math.floor(list.length * rate));
+      .slice(0, Math.floor(list.length * rate))
+      .map((e, i) => ({
+        ...e,
+        组内排名: i + 1,
+      }));
 
     return candidates.length > normalCandidates.length
-      ? candidates
-      : normalCandidates;
+      ? candidates.map((e, i) => ({
+          ...e,
+          组内排名: i + 1,
+        }))
+      : normalCandidates.map((e, i) => ({
+          ...e,
+          组内排名: i + 1,
+        }));
   } else {
-    return list
-      .sort((a, b) => b.综合成绩 - a.综合成绩)
-      .slice(0, Math.floor(list.length * rate));
+    return list.slice(0, Math.floor(list.length * rate)).map((e, i) => ({
+      ...e,
+      组内排名: i + 1,
+    }));
   }
 };
 
@@ -822,7 +837,6 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
   const result = flatMap(teachersByStudentCount, (list, countInfo) => {
     return list
       .filter((e) => e.校区 != "元马双龙校区")
-      .sort((a, b) => b.综合成绩 - a.综合成绩)
       .slice(0, Math.floor(list.length * rate))
       .map((e, i) => ({
         ...e,
@@ -833,9 +847,7 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
 
   const fn = config["坝区"];
 
-  const specialTeachers = list
-    .sort((a, b) => b.综合成绩 - a.综合成绩)
-    .filter((e) => e.校区 == "元马双龙校区");
+  const specialTeachers = list.filter((e) => e.校区 == "元马双龙校区");
 
   const selectedSpecialTeachers = specialTeachers
     .slice(0, Math.floor(specialTeachers.length * 0.5))
@@ -878,8 +890,9 @@ export const getExcellentTeachers = (
     const itemsBySubject = groupBy(items, "年级");
 
     for (const subject in itemsBySubject) {
-      const list = itemsBySubject[subject];
-
+      const list = itemsBySubject[subject].sort(
+        (a, b) => b.综合成绩 - a.综合成绩
+      );
       // 计算每区每学科的优质教师
       const res = cb(region, subject, list, teachers);
       itemsBySubject[subject] = res;
@@ -889,7 +902,7 @@ export const getExcellentTeachers = (
   }
 
   const result = flatMap(teachersGroupedByRegion, (v, k) => {
-    return map(v, (e) => ({
+    return map(v, (e, i) => ({
       ...e,
       区域: k,
     }));
