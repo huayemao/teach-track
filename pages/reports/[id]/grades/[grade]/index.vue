@@ -109,9 +109,9 @@ watch(
         @editBtnClicked="() => { edit = true }" />
       <div class="w-full relative -top-[5.2rem] z-10">
         <BaseTabs @update:selected="s => s && (activeTab = s)" :selected="activeTab" :tabs="[
-          { label: '教师', value: 'teachers' },
-          { label: '学校', value: 'schools' },
-          { label: '优质教师奖', value: 'excllentTeachers' },
+          { label: `教师${teachers?.length && '（' + teachers?.length + '）' || ''}`, value: 'teachers' },
+          { label: `学校${schools?.length && '（' + schools?.length + '）' || ''}`, value: 'schools' },
+          { label: `优质教师奖${excllentTeachers?.length && '（' + excllentTeachers?.length + '）' || ''}`, value: 'excllentTeachers' },
         ]">
           <template #tab="{ activeValue }">
             <TeacherResultTable :teachers="(teachers as TeacherInfo[])" v-show="activeValue === 'teachers'" />
