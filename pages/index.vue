@@ -111,27 +111,28 @@ const data: Report[] = DEFAULT_REPORTS;
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
                   <div
                     class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-40">
-                    <span v-if="i == 0"
-                      class="text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0">区域</span><span
+                    <span
+                      :class="{ 'text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0': true, 'sm:hidden': i != 0 }">区域</span><span
                       class="text-muted-500 dark:text-muted-400 font-sans text-sm">{{ item.attributes.region }}</span>
                   </div>
                   <div
                     class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-40">
-                    <span v-if="i == 0"
-                      class="text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0">教育阶段</span><span
+                    <span
+                      :class="{ 'text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0': true, 'sm:hidden': i != 0 }">教育阶段</span><span
                       class="text-muted-500 dark:text-muted-400 font-sans text-sm">{{
                         EDU_STAGE_MAPPING[item.attributes.eduStage] }}</span>
                   </div>
                   <div
                     class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-40">
-                    <span v-if="i == 0"
-                      class="text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0">状态</span><span
+                    <span
+                      :class="{ 'text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0': true, 'sm:hidden': i != 0 }">状态</span><span
                       class="whitespace-nowrap inline-block px-3 font-sans transition-shadow duration-300 py-1 text-[0.65rem] rounded-full bg-info-100 text-info-500 border-info-100 dark:border-info-500 dark:text-info-500 border dark:bg-transparent capitalize">未发布</span>
                   </div>
-         
-                  <div class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-40">
-                    <span v-if="i == 0"
-                      class="text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0">操作</span>
+
+                  <div
+                    class="relative flex h-8 items-center justify-end px-6 sm:h-10 sm:justify-center sm:px-2 w-full sm:w-40">
+                    <span
+                      :class="{ 'text-muted-400 absolute start-8 top-1/2 mx-auto -translate-y-1/2 text-center font-sans text-xs font-medium uppercase sm:inset-x-0 sm:-top-10 sm:translate-y-0': true, 'sm:hidden': i != 0 }">操作</span>
                     <NuxtLink :to="`reports/${item.id}`"
                       class="relative font-sans font-normal text-sm inline-flex items-center justify-center leading-5 no-underline h-8 px-3 py-2 space-x-1 border nui-focus transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:enabled:shadow-none text-muted-500 bg-muted-200 border-muted-200 dark:text-white dark:bg-muted-700/40 dark:border-muted-700/40 dark:hover:enabled:bg-muted-700/60 hover:enabled:bg-muted-100 dark:active:enabled:border-muted-800 dark:active:enabled:bg-muted-800 active:enabled:bg-muted-200/50 rounded-md">
                       <span>查看</span>
