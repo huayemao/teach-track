@@ -20,21 +20,28 @@ const filterHandler = (
   return row[property] === value
 }
 
+const shouldFormat = (key: string, value: any) => {
+  return (typeof value === 'number') && ['数', '排名'].every(str => !(key.includes(str)))
+}
+
+const shouldShowCol = (key: string, value: any) => {
+  return ['number', 'string'].includes(typeof value) && !['应考数', '教科研加分', '总分', '合格数', '实考数', '优生数', '平均分', '合格率', '优生率'].includes(key)
+}
+
 </script>
 
 <template>
   <el-table :data="teachers" striped v-if="teachers?.length" class="h-full" style="overflow:unset">
     <template v-for="key in Object.keys(teachers[0])">
-      <el-table-column v-if="['number', 'string'].includes(typeof teachers[0][key])" sortable
+      <el-table-column v-if="shouldShowCol(key, teachers[0][key])" sortable
         :filters="filterableCols.includes(key) ? dedupe(teachers.map(e => e[key])).map(e => ({ text: e, value: e })) : undefined"
-        header-align="center" align="center" :prop="key" :label="key" label-class-name="text-center" :formatter="typeof teachers[0][key] === 'number' && !key.includes('数')
-          ? (row) =>
-            Number(row[key])
-              .toLocaleString('zh-CN', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2,
-              })
-              .replace(/,/g, '')
+        header-align="center" align="center" :prop="key" :label="key" label-class-name="text-center" :formatter="shouldFormat(key, teachers[0][key]) ? (row) =>
+          Number(row[key])
+            .toLocaleString('zh-CN', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+            })
+            .replace(/,/g, '')
           : undefined
           " :filter-method="filterableCols.includes(key) ? filterHandler : undefined" />
     </template>

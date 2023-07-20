@@ -824,9 +824,10 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
       .filter((e) => e.校区 != "元马双龙校区")
       .sort((a, b) => b.综合成绩 - a.综合成绩)
       .slice(0, Math.floor(list.length * rate))
-      .map((e) => ({
+      .map((e, i) => ({
         ...e,
         人数类别: countInfo,
+        组内排名: i + 1,
       }));
   });
 
