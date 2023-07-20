@@ -11,7 +11,7 @@ const { teachers } = defineProps<{
 
 const dedupe = (arr: any[]) => Array.from(new Set(arr))
 
-const filterableCols = ['学校', '年级']
+const filterableCols = ['学校', '年级', '校区']
 const filterHandler = (
   value: TeacherInfo,
   row: object,

@@ -821,6 +821,7 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
 
   const result = flatMap(teachersByStudentCount, (list, countInfo) => {
     return list
+      .filter((e) => e.校区 != "元马双龙校区")
       .sort((a, b) => b.综合成绩 - a.综合成绩)
       .slice(0, Math.floor(list.length * rate))
       .map((e) => ({
@@ -828,7 +829,38 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
         人数类别: countInfo,
       }));
   });
-  console.log(region, subject, teachersByStudentCount, result);
+
+  const fn = config["坝区"];
+
+  const specialTeachers = list
+    .sort((a, b) => b.综合成绩 - a.综合成绩)
+    .filter((e) => e.校区 == "元马双龙校区");
+
+  const selectedSpecialTeachers = specialTeachers
+    .slice(0, Math.floor(specialTeachers.length * 0.5))
+    .filter((teacher) => {
+      const topOther = list
+        .filter((t) => {
+          const regionName = getRegionNameByTeacher(t);
+          return (
+            t.校区 != "元马双龙校区" &&
+            regionName === "坝区" &&
+            t.年级 === subject &&
+            fn(Number(t.应考数)) === fn(Number(teacher.应考数))
+          );
+        })
+        .sort((a, b) => b.综合成绩 - a.综合成绩)[0];
+      // console.log(teacher, topOther);
+
+      return teacher.综合成绩 > topOther.综合成绩;
+    })
+    .map((e) => ({
+      ...e,
+      人数类别: fn(Number(e.应考数)),
+    }));
+
+  result.push(...selectedSpecialTeachers);
+
   return result;
 };
 
