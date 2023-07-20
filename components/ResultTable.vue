@@ -20,17 +20,8 @@ const currentPage = computed(() => {
 })
 
 const shouldFormat = (key: string, value: any) => {
-  return (typeof value === 'number') && ['数', '名次'].every(str => !(key.includes(str)))
+  return (typeof value === 'number') && ['数', '名次', '名'].every(str => !(key.includes(str)))
 }
-
-// const filterHandler = (
-//   value: object,
-//   row: object,
-//   column: TableColumnCtx<object>
-// ) => {
-//   const property = column['property']
-//   return row[property] === value
-// }
 
 const filterer = ref((e: object) => !!e)
 

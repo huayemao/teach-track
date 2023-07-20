@@ -2,6 +2,8 @@
 import { GRADE_MAPPING } from "@/constants/index";
 import { getFullReportTitle } from "@/utils/biz/report";
 import { SchoolInfo, TeacherInfo, run } from "@/utils/process";
+import groupBy from 'lodash/groupBy';
+import map from 'lodash/map';
 import { ref, watch } from "vue";
 import XLSX from 'xlsx';
 
@@ -31,6 +33,24 @@ const { data: students, mutate: setStudents } = useStorageState<SchoolInfo[]>([r
 const excllentTeachers = computed(() => {
   const method = grade < 7 ? getElementaryExcellentT : getJuniorExcellentT
   return teachers.value?.length ? getExcellentTeachers(teachers.value, method) : null
+})
+
+const stamps = [50, 200, 300, 1000]
+
+const goodStudentCounts = computed(() => {
+  if (!students.value?.length) {
+    return []
+  }
+  const studentsBySchools = groupBy(students.value, '学校')
+  const res = map(studentsBySchools, (v, k) => {
+    return Object.fromEntries(
+      [['学校', k]].concat(
+        stamps.map(stamp => {
+          const count = v.filter(s => s.名次 <= stamp).length
+          return [`前${stamp}名`, count]
+        })))
+  })
+  return res
 })
 
 const generate = async ({ fileList }) => {
@@ -115,16 +135,20 @@ watch(
           { label: `教师${teachers?.length && '（' + teachers?.length + '）' || ''}`, value: 'teachers' },
           { label: `学校${schools?.length && '（' + schools?.length + '）' || ''}`, value: 'schools' },
           { label: `优质教师奖${excllentTeachers?.length && '（' + excllentTeachers?.length + '）' || ''}`, value: 'excllentTeachers' },
+          { label: `总分优生数${goodStudentCounts?.length && '（' + goodStudentCounts?.length + '）' || ''}`, value: 'goodStudentCounts' },
         ]">
           <template #tab="{ activeValue }">
             <TeacherResultTable :teachers="(teachers as TeacherInfo[])" v-if="activeValue === 'teachers'" />
             <ExcellentTeachersTable :teachers="(excllentTeachers as TeacherInfo[])"
               v-if="activeValue === 'excllentTeachers'" />
-            <ResultTable :data="(students as object[])" v-if="activeValue === 'students'" :filterableCols="['学校', '班级']" />
+            <ResultTable :data="(students as object[])" v-if="activeValue === 'students'"
+              :filterableCols="['学校', '班级']" />
+            <ResultTable :data="(goodStudentCounts as object[])" v-if="activeValue === 'goodStudentCounts'" />
             <SchoolResultTable v-if="activeValue === 'schools'" :schools="(schools as SchoolInfo[])" />
           </template>
         </BaseTabs>
       </div>
     </div>
+    {{ JSON.stringify(xxx) }}
   </template>
 </template>
