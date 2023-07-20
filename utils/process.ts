@@ -9,6 +9,7 @@ import {
   JUNIOR_SCHOOLS,
   SCORE_THRESHOLD_BY_GRADE,
 } from "@/constants/index";
+import { rank } from "@/utils/rank";
 import flatMap from "lodash/flatMap";
 import groupBy from "lodash/groupBy";
 import map from "lodash/map";
@@ -612,7 +613,7 @@ function runSchools(
       (enableConsolidationRate ? school.巩固率实际得分 : 0);
   }
 
-  return schools;
+  return rank(schools, "综合成绩", "名次");
 }
 
 // todo: 先清空数据
@@ -730,7 +731,7 @@ function runTeachers(
     }
   }
 
-  return teachers;
+  return rank(teachers, "综合成绩", "名次");
 }
 
 interface getRegionSubjectExcellentTeachers {
@@ -765,7 +766,7 @@ export const getJuniorExcellentT: getRegionSubjectExcellentTeachers = (
       })
       .map((e, i) => ({
         ...e,
-        组内排名: i + 1,
+        组内名次: i + 1,
       }));
   } else if (region === "山区") {
     const candidates = list.filter((t) => {
@@ -779,22 +780,22 @@ export const getJuniorExcellentT: getRegionSubjectExcellentTeachers = (
       .slice(0, Math.floor(list.length * rate))
       .map((e, i) => ({
         ...e,
-        组内排名: i + 1,
+        组内名次: i + 1,
       }));
 
     return candidates.length > normalCandidates.length
       ? candidates.map((e, i) => ({
           ...e,
-          组内排名: i + 1,
+          组内名次: i + 1,
         }))
       : normalCandidates.map((e, i) => ({
           ...e,
-          组内排名: i + 1,
+          组内名次: i + 1,
         }));
   } else {
     return list.slice(0, Math.floor(list.length * rate)).map((e, i) => ({
       ...e,
-      组内排名: i + 1,
+      组内名次: i + 1,
     }));
   }
 };
@@ -841,7 +842,7 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
       .map((e, i) => ({
         ...e,
         人数类别: countInfo,
-        组内排名: i + 1,
+        组内名次: i + 1,
       }));
   });
 

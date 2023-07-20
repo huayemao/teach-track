@@ -21,7 +21,7 @@ const filterHandler = (
 }
 
 const shouldFormat = (key: string, value: any) => {
-  return (typeof value === 'number') && ['数', '排名'].every(str => !(key.includes(str)))
+  return (typeof value === 'number') && ['数', '名次'].every(str => !(key.includes(str)))
 }
 
 const shouldShowCol = (key: string, value: any) => {
