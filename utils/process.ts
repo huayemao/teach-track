@@ -484,6 +484,7 @@ export async function run(
                   DEFAULT_SCHOOL_METRIC_CONFIG_BY_REGION
                 );
               },
+        enableConsolidationRate: grade > 6,
       }
     );
 
