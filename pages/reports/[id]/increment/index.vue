@@ -97,6 +97,6 @@ const output = () => { }
   <div v-show="!edit" class="w-full">
     <DataHeader :title="getFullReportTitle(report)" subTitle="教学质量增量" canOutput @outputBtnClicked="output"
       @editBtnClicked="() => { edit = true }" />
-    <ResultTable :data="tableData" />
+    <ResultTable v-if="tableData?.length" :data="tableData" />
   </div>
 </template>
