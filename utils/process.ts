@@ -765,9 +765,15 @@ export const getJuniorExcellentT: getRegionSubjectExcellentTeachers = (
 
   // 元谋一中、元马中学教师教学综合成绩超过坝区同学科教学综合成绩第 1 名且不超过本校任课教师数 50%均可获教学成
   if (region === "城区") {
-    const candidates = list
-      .sort((a, b) => b.综合成绩 - a.综合成绩)
-      .slice(0, Math.floor(list.length * 0.5));
+    const teachersBySchool = groupBy(
+      list.sort((a, b) => b.综合成绩 - a.综合成绩),
+      "学校"
+    );
+
+    const candidates = flatMap(teachersBySchool, (teachers) => {
+      const count = teachers.length;
+      return teachers.slice(0, Math.round(count * 0.5));
+    });
 
     return candidates
       .filter((t) => {
@@ -789,7 +795,7 @@ export const getJuniorExcellentT: getRegionSubjectExcellentTeachers = (
     });
 
     const normalCandidates = list
-      .slice(0, Math.floor(list.length * rate))
+      .slice(0, Math.round(list.length * rate))
       .map((e, i) => ({
         ...e,
         组内名次: i + 1,
@@ -805,7 +811,7 @@ export const getJuniorExcellentT: getRegionSubjectExcellentTeachers = (
           组内名次: i + 1,
         }));
   } else {
-    return list.slice(0, Math.floor(list.length * rate)).map((e, i) => ({
+    return list.slice(0, Math.round(list.length * rate)).map((e, i) => ({
       ...e,
       组内名次: i + 1,
     }));
@@ -850,7 +856,7 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
   const result = flatMap(teachersByStudentCount, (list, countInfo) => {
     return list
       .filter((e) => e.校区 != "元马双龙校区")
-      .slice(0, Math.floor(list.length * rate))
+      .slice(0, Math.round(list.length * rate))
       .map((e, i) => ({
         ...e,
         人数类别: countInfo,
@@ -863,7 +869,7 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
   const specialTeachers = list.filter((e) => e.校区 == "元马双龙校区");
 
   const selectedSpecialTeachers = specialTeachers
-    .slice(0, Math.floor(specialTeachers.length * 0.5))
+    .slice(0, Math.round(specialTeachers.length * 0.5))
     .filter((teacher) => {
       const topOther = list
         .filter((t) => {
