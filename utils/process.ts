@@ -829,18 +829,18 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
   const config = {
     山区: (studentCount: number) => {
       if (studentCount < 20) {
-        return "20人以下";
+        return "山区|20人以下";
       } else {
-        return "20人及以上";
+        return "山区|20人及以上";
       }
     },
     坝区: (studentCount: number) => {
       if (studentCount < 20) {
-        return "20人以下";
+        return "坝区|20人以下";
       } else if (studentCount >= 20 && studentCount < 40) {
-        return "20-40人";
+        return "坝区|20-40人";
       } else {
-        return "40人及以上";
+        return "坝区|40人及以上";
       }
     },
   };
@@ -859,7 +859,7 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
       .slice(0, Math.round(list.length * rate))
       .map((e, i) => ({
         ...e,
-        人数类别: countInfo,
+        组别: countInfo,
         组内名次: i + 1,
       }));
   });
@@ -887,7 +887,7 @@ export const getElementaryExcellentT: getRegionSubjectExcellentTeachers = (
     })
     .map((e) => ({
       ...e,
-      人数类别: fn(Number(e.应考数)),
+      组别: fn(Number(e.应考数)),
     }));
 
   result.push(...selectedSpecialTeachers);

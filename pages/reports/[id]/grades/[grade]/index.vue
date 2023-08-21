@@ -149,6 +149,5 @@ watch(
         </BaseTabs>
       </div>
     </div>
-    {{ JSON.stringify(xxx) }}
   </template>
 </template>
